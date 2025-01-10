@@ -22,4 +22,7 @@ public class Plant extends DateEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WateringRecord> wateringRecords = new ArrayList<>();
+
 }

@@ -32,4 +32,18 @@ public class Plant extends DateEntity {
     @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WateringRecord> wateringRecords = new ArrayList<>();
 
+    protected Plant(){}
+
+    public Plant(String name, int commonInterval, Integer summerInterval, Integer winterInterval) {
+        this.name = name;
+        this.commonInterval = commonInterval;
+
+        // 계절별 물주기를 추가 (여름, 겨울)
+        if (summerInterval != null) {
+            this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.SUMMER, summerInterval));
+        }
+        if (winterInterval != null) {
+            this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.WINTER, winterInterval));
+        }
+    }
 }

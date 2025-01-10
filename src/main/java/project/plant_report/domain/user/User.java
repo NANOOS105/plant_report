@@ -29,4 +29,7 @@ public class User {
 
     private Instant updatedAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Plant> plants = new ArrayList<>();
+
 }

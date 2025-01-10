@@ -18,7 +18,7 @@ public class Plant extends DateEntity {
 
     @Enumerated(EnumType.STRING) // ENUM 매핑 방식: String 사용
     @Column(nullable = false)
-    private PlantType type;
+    private Seoson seoson;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

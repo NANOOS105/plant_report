@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import project.plant_report.domain.common.DateEntity;
 import project.plant_report.domain.plant.Plant;
 
 import java.time.Instant;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +27,6 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String password;
-
-    @Column(nullable = false)
-    private Instant createdAt;
-
-    private Instant updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Plant> plants = new ArrayList<>();

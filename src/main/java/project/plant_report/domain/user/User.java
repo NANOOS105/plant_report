@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class User extends DateEntity {
 
     @Id

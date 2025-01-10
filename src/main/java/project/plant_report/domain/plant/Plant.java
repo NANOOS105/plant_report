@@ -1,10 +1,15 @@
 package project.plant_report.domain.plant;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import project.plant_report.domain.common.DateEntity;
 import project.plant_report.domain.user.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Getter
 public class Plant extends DateEntity {
 
     @Id
@@ -12,11 +17,13 @@ public class Plant extends DateEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String nName;
+    private String name;
 
-    @Enumerated(EnumType.STRING) // ENUM 매핑 방식: String 사용
     @Column(nullable = false)
-    private Season seoson;
+    private int commonInterval;
+
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SeasonalWateringInterval> seasonalIntervals = new ArrayList<>(); // 계절별 물주기
 
     @ManyToOne
     @JoinColumn(name = "user_id")

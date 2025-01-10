@@ -1,10 +1,12 @@
 package project.plant_report.domain.plant;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
 public class WateringRecord {
 
     @Id

@@ -10,14 +10,13 @@ public class Plant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "plant_id")
     private Long id;
 
-    @Column(name = "plant_name", nullable = false)
+    @Column(nullable = false)
     private String nName;
 
     @Enumerated(EnumType.STRING) // ENUM 매핑 방식: String 사용
-    @Column(name = "plant_type", nullable = false)
+    @Column(nullable = false)
     private PlantType type;
 
     @Column(nullable = false)

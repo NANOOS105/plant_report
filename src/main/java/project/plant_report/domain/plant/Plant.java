@@ -1,6 +1,7 @@
 package project.plant_report.domain.plant;
 
 import jakarta.persistence.*;
+import project.plant_report.domain.user.User;
 
 import java.time.Instant;
 
@@ -24,5 +25,8 @@ public class Plant {
 
     private Instant updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

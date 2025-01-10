@@ -1,6 +1,6 @@
 package project.plant_report.domain.plant;
 
-public enum Seoson {
+public enum Season {
     COMMON,
     SUMMER,
     WINTER

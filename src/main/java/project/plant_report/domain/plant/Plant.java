@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import project.plant_report.domain.common.DateEntity;
 import project.plant_report.domain.user.User;
 
-import java.time.Instant;
-
 @Entity
 public class Plant extends DateEntity {
 
@@ -18,7 +16,7 @@ public class Plant extends DateEntity {
 
     @Enumerated(EnumType.STRING) // ENUM 매핑 방식: String 사용
     @Column(nullable = false)
-    private Seoson seoson;
+    private Season seoson;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

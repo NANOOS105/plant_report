@@ -5,5 +5,7 @@ import lombok.Getter;
 @Getter
 public class PlantRequestDto {
     private String name; // 식물 이름
-    private int wateringInterval; // 물주기 간격
+    private int commonInterval; // 공통 물주기
+    private int summerInterval; // 여름 물주기 (선택적)
+    private int winterInterval; // 겨울 물주기 (선택적)
 }

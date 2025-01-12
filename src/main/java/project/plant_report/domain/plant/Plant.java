@@ -59,6 +59,34 @@ public class Plant extends DateEntity {
                 .orElse(this.commonInterval); // 값이 없으면 공통 물주기 반환
     }
 
+    // 식물 업데이트
+    // 업데이트는 엔터티의 상태를 변경하는 작업이기 때문에
+    // 엔터티 내부에서 캡슐화해서 처리
+    public void updatePlant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval) {
+        if (name != null && !name.isBlank()) {
+            this.name = name; // 이름 변경
+        }
+        if (commonInterval != null) {
+            this.commonInterval = commonInterval; // 공통 물주기 간격 변경
+        }
 
+        // 계절별 물주기 변경
+        if (summerInterval != null) {
+            updateSeasonalInterval(Season.SUMMER, summerInterval);
+        }
+        if (winterInterval != null) {
+            updateSeasonalInterval(Season.WINTER, winterInterval);
+        }
+    }
+
+    private void updateSeasonalInterval(Season season, int interval) {
+        this.seasonalIntervals.stream()
+                .filter(seasonalInterval -> seasonalInterval.getSeason() == season) // 계절 필터
+                .findFirst()
+                .ifPresentOrElse(
+                        seasonalInterval -> seasonalInterval.updateInterval(interval), // 있으면 업데이트
+                        () -> this.seasonalIntervals.add(new SeasonalWateringInterval(this, season, interval)) // 없으면 새로 추가
+                );
+    }
 
 }

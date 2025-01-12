@@ -29,5 +29,9 @@ public class SeasonalWateringInterval {
         this.season = season;
         this.interval = interval;
     }
+
+    public void updateInterval(int interval) {
+        this.interval = interval;
+    }
 }
 

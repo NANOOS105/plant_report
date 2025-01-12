@@ -22,10 +22,12 @@ public class SeasonalWateringInterval {
     @Column(nullable = false)
     private int interval; // 계절별 물주기 간격 (일 단위)
 
-    public SeasonalWateringInterval(Plant plant, Season season, Integer seasonInterval) {
+    protected SeasonalWateringInterval() {}
+
+    public SeasonalWateringInterval(Plant plant, Season season, Integer interval) {
         this.plant = plant;
         this.season = season;
-        this.interval = seasonInterval;
+        this.interval = interval;
 
     }
 }

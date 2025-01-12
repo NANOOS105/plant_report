@@ -38,10 +38,27 @@ public class Plant extends DateEntity {
         this.name = name;
         this.commonInterval = commonInterval;
 
-        // 계절별 물주기를 추가 (여름, 겨울)
-        // 들어오는 값이 없을 경우 공통 물주기 간격 등록
-        this.seasonalIntervals.add(new SeasonalWateringInterval(this,
-                summerInterval != null ? summerInterval : commonInterval,
-                winterInterval != null ? winterInterval : commonInterval));
+        // 여름 데이터가 있는 경우만 저장
+        if (summerInterval != null) {
+            this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.SUMMER, summerInterval));
+        }
+
+        // 겨울 데이터가 있는 경우만 저장
+        if (winterInterval != null) {
+            this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.WINTER, winterInterval));
+        }
     }
+
+    //====비즈니스 로직=====
+    // 특정 계절의 물주기 조회
+    public int getIntervalForSeason(Season season) {
+        return this.seasonalIntervals.stream()
+                .filter(interval -> interval.getSeason() == season)
+                .map(SeasonalWateringInterval::getInterval)
+                .findFirst()
+                .orElse(this.commonInterval); // 값이 없으면 공통 물주기 반환
+    }
+
+
+
 }

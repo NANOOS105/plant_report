@@ -16,15 +16,18 @@ public class SeasonalWateringInterval {
     private Plant plant; // 특정 식물과 연결
 
     @Column
-    private Integer summerInterval;
+    private Season season;
 
     @Column
-    private Integer winterInterval;
+    private Integer interval;
 
-    public SeasonalWateringInterval(Plant plant, Integer summerInterval, Integer winterInterval) {
+
+    protected SeasonalWateringInterval() {}
+
+    public SeasonalWateringInterval(Plant plant, Season season, Integer interval) {
         this.plant = plant;
-        this.summerInterval = summerInterval;
-        this.winterInterval = winterInterval;
+        this.season = season;
+        this.interval = interval;
     }
 }
 

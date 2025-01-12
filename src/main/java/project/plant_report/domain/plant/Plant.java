@@ -40,9 +40,8 @@ public class Plant extends DateEntity {
 
         // 계절별 물주기를 추가 (여름, 겨울)
         // 들어오는 값이 없을 경우 공통 물주기 간격 등록
-        this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.SUMMER,
-                summerInterval != null ? summerInterval : commonInterval));
-        this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.WINTER,
+        this.seasonalIntervals.add(new SeasonalWateringInterval(this,
+                summerInterval != null ? summerInterval : commonInterval,
                 winterInterval != null ? winterInterval : commonInterval));
     }
 }

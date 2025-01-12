@@ -15,20 +15,16 @@ public class SeasonalWateringInterval {
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant; // 특정 식물과 연결
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Season season; // 여름, 겨울 (ENUM)
+    @Column
+    private Integer summerInterval;
 
-    @Column(nullable = false)
-    private int interval; // 계절별 물주기 간격 (일 단위)
+    @Column
+    private Integer winterInterval;
 
-    protected SeasonalWateringInterval() {}
-
-    public SeasonalWateringInterval(Plant plant, Season season, Integer interval) {
+    public SeasonalWateringInterval(Plant plant, Integer summerInterval, Integer winterInterval) {
         this.plant = plant;
-        this.season = season;
-        this.interval = interval;
-
+        this.summerInterval = summerInterval;
+        this.winterInterval = winterInterval;
     }
 }
 

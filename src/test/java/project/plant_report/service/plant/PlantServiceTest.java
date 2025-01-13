@@ -12,8 +12,10 @@ import project.plant_report.domain.plant.Season;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class PlantServiceTest {
 
@@ -38,7 +40,7 @@ class PlantServiceTest {
         // given
         Plant plant1 = new Plant("Monstera", 10, 7, 15);
         Plant plant2 = new Plant("Ficus", 14, 10, 20);
-        Mockito.when(plantRepository.findAll()).thenReturn(List.of(plant1, plant2));
+        when(plantRepository.findAll()).thenReturn(List.of(plant1, plant2));
 
         // when
         List<PlantResponseDto> result = plantService.getPlants(Season.SUMMER);
@@ -48,6 +50,20 @@ class PlantServiceTest {
         assertEquals(7, result.get(0).getWateringInterval()); // 첫 번째 식물의 여름 간격 확인
         assertEquals(10, result.get(1).getWateringInterval()); // 두 번째 식물의 여름 간격 확인
      }
+
+     @Test
+     public void deletePlant() throws Exception{
+         //given
+         Long plantId = 1L;
+         Plant plant = new Plant("Monstera", 10, 7, 15);
+         when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
+
+         //when
+         plantService.deletePlant(plantId);
+
+         //then
+         verify(plantRepository, times(1)).delete(plant);
+      }
 
 
 }

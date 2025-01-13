@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class PlantServiceTest {
 
     //Mock
-    //식제 구현체가 아니라 행동만 설정할 수 있는 가짜 객체 생성
+    //실제 구현체가 아니라 행동만 설정할 수 있는 가짜 객체 생성
     @Mock
     private PlantRepository plantRepository;
 

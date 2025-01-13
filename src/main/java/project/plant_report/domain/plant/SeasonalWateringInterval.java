@@ -19,19 +19,19 @@ public class SeasonalWateringInterval {
     private Season season;
 
     @Column
-    private Integer interval;
+    private Integer wateringInterval;
 
 
     protected SeasonalWateringInterval() {}
 
-    public SeasonalWateringInterval(Plant plant, Season season, Integer interval) {
+    public SeasonalWateringInterval(Plant plant, Season season, Integer wateringInterval) {
         this.plant = plant;
         this.season = season;
-        this.interval = interval;
+        this.wateringInterval = wateringInterval;
     }
 
-    public void updateInterval(int interval) {
-        this.interval = interval;
+    public void updateInterval(int wateringInterval) {
+        this.wateringInterval = wateringInterval;
     }
 }
 

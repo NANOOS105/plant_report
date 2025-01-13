@@ -33,7 +33,8 @@ public class PlantService {
                 request.getWinterInterval()
         );
 
-        plantRepository.save(plant);    }
+        plantRepository.save(plant);
+    }
 
     //식물 조회 서비스
     @Transactional(readOnly = true)
@@ -65,7 +66,6 @@ public class PlantService {
     }
 
     //다음 물주기 날짜 계산
-
     private String calNextWateringDate(int wateringInterval) {
         LocalDate today = LocalDate.now(); // 오늘 날짜
         LocalDate nextWateringDate = today.plusDays(wateringInterval); // 물주기 간격만큼 더함

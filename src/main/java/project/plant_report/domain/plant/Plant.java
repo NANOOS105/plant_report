@@ -32,6 +32,7 @@ public class Plant extends DateEntity {
     @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WateringRecord> wateringRecords = new ArrayList<>();
 
+    //== 생성자 ==
     protected Plant(){}
 
     public Plant(String name, int commonInterval, Integer summerInterval, Integer winterInterval) {
@@ -54,7 +55,7 @@ public class Plant extends DateEntity {
     public int getIntervalForSeason(Season season) {
         return this.seasonalIntervals.stream()
                 .filter(interval -> interval.getSeason() == season)
-                .map(SeasonalWateringInterval::getInterval)
+                .map(SeasonalWateringInterval::getWateringInterval)
                 .findFirst()
                 .orElse(this.commonInterval); // 값이 없으면 공통 물주기 반환
     }
@@ -79,13 +80,13 @@ public class Plant extends DateEntity {
         }
     }
 
-    private void updateSeasonalInterval(Season season, int interval) {
+    private void updateSeasonalInterval(Season season, int wateringInterval) {
         this.seasonalIntervals.stream()
                 .filter(seasonalInterval -> seasonalInterval.getSeason() == season) // 계절 필터
                 .findFirst()
                 .ifPresentOrElse(
-                        seasonalInterval -> seasonalInterval.updateInterval(interval), // 있으면 업데이트
-                        () -> this.seasonalIntervals.add(new SeasonalWateringInterval(this, season, interval)) // 없으면 새로 추가
+                        seasonalInterval -> seasonalInterval.updateInterval(wateringInterval), // 있으면 업데이트
+                        () -> this.seasonalIntervals.add(new SeasonalWateringInterval(this, season, wateringInterval)) // 없으면 새로 추가
                 );
     }
 

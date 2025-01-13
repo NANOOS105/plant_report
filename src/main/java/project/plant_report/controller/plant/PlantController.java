@@ -2,7 +2,7 @@ package project.plant_report.controller.plant;
 
 import org.springframework.web.bind.annotation.*;
 import project.plant_report.domain.plant.Season;
-import project.plant_report.dto.plant.request.PlantCreateRequestDto;
+import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 import project.plant_report.service.plant.PlantService;
@@ -20,7 +20,7 @@ public class PlantController {
     }
 
     @PostMapping
-    public void savePlant(@RequestBody PlantCreateRequestDto request){
+    public void savePlant(@RequestBody PlantSaveRequestDto request){
         plantService.savePlant(request);
     }
 

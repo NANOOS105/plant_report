@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.plant_report.domain.plant.Plant;
 import project.plant_report.domain.plant.PlantRepository;
 import project.plant_report.domain.plant.Season;
-import project.plant_report.dto.plant.request.PlantCreateRequestDto;
+import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 import project.plant_report.exception.PlantNotFoundException;
@@ -25,7 +25,7 @@ public class PlantService {
 
     //식물 등록 서비스
     @Transactional
-    public void savePlant(PlantCreateRequestDto request) {
+    public void savePlant(PlantSaveRequestDto request) {
         Plant plant = new Plant(
                 request.getName(),
                 request.getCommonInterval(),

@@ -1,12 +1,15 @@
 spring:
+  # .env import
+  config:
+    import: optional:file:.env[.properties]
   datasource:
-    url: "jdbc:mysql://localhost/plantreport"
+    url: ${dbURL}
     username: "root"
-    password: ${sqlPassword}
+    password: ${dbPassword}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

@@ -23,10 +23,20 @@ public class User extends DateEntity {
     @Column(nullable = false, length = 50)
     private String email;
 
+    @Column(nullable = false, length = 50)
+    private String name;
+
     @Column(nullable = false, length = 20)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Plant> plants = new ArrayList<>();
 
+    protected User() {}
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 }

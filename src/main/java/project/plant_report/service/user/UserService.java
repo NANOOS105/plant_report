@@ -20,12 +20,19 @@ public class UserService {
     //유저 등록 서비스
     @Transactional
     public void saveUser(UserSaveRequestDto request) {
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다: " + request.getEmail());
+        }
+        if (userRepository.existsByName(request.getName())) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다: " + request.getName());
+        }
+
         User user = new User(
                 request.getName(),
                 request.getEmail(),
                 request.getPassword()
         );
-
         userRepository.save(user);
     }
 

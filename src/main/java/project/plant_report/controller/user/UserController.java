@@ -1,10 +1,8 @@
 package project.plant_report.controller.user;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import project.plant_report.dto.user.request.UserRequestDto;
+import org.springframework.web.bind.annotation.*;
+import project.plant_report.dto.user.request.UserSaveRequestDto;
+import project.plant_report.dto.user.request.request.UserUpdateRequestDto;
 import project.plant_report.service.user.UserService;
 
 @RestController
@@ -18,7 +16,17 @@ public class UserController {
     }
 
     @PostMapping
-    public void saveUser(@RequestBody UserRequestDto request){
+    public void saveUser(@RequestBody UserSaveRequestDto request){
         userService.saveUser(request);
+    }
+
+    @PutMapping
+    public void updateUser(@RequestBody UserUpdateRequestDto request){
+        userService.updateUser(request);
+    }
+
+    @DeleteMapping
+    public void deleteUser(@RequestParam Long id){
+        userService.deleteUser(id);
     }
 }

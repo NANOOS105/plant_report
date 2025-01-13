@@ -36,6 +36,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
 
     //sql
+    implementation 'mysql:mysql-connector-java:8.0.33'
     runtimeOnly 'mysql:mysql-connector-java'
 }
 

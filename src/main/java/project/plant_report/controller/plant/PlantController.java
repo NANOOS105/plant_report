@@ -33,4 +33,9 @@ public class PlantController {
     public void updatePlant(@RequestBody PlantUpdateRequestDto request){
         plantService.updatePlant(request);
     }
+
+    @DeleteMapping
+    public void deletePlant(@RequestParam Long id){
+        plantService.deletePlant(id);
+    }
 }

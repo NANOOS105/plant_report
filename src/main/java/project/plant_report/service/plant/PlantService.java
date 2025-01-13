@@ -55,8 +55,17 @@ public class PlantService {
         plant.updatePlant(request.getName(), request.getCommonInterval(),request.getSummerInterval(), request.getWinterInterval());
     }
 
+    //식물 삭제 서비스
+    @Transactional
+    public void deletePlant(Long id) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(()->new PlantNotFoundException(id));
+        plantRepository.delete(plant);
+
+    }
 
     //다음 물주기 날짜 계산
+
     private String calNextWateringDate(int wateringInterval) {
         LocalDate today = LocalDate.now(); // 오늘 날짜
         LocalDate nextWateringDate = today.plusDays(wateringInterval); // 물주기 간격만큼 더함

@@ -39,4 +39,15 @@ public class User extends DateEntity {
         this.email = email;
         this.password = password;
     }
+
+    // == 비즈니스 로직 ==
+    public void updateUser(String name, String password) {
+        if(name != null & !name.isBlank()){
+            this.name = name;
+        }
+        if(password != null & !password.isBlank()){
+            this.password = password;
+        }
+
+    }
 }

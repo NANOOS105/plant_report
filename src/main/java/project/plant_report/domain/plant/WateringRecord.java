@@ -17,7 +17,19 @@ public class WateringRecord {
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 
-    private LocalDate wateringDate;
+    @Enumerated(EnumType.STRING)
+    private Season season;
 
-    private String note;
+    private LocalDate lastWateringDate;
+
+    private LocalDate nextWateringDate;
+
+    protected WateringRecord(){}
+    public WateringRecord(Plant plant, LocalDate lastWateringDate, LocalDate nextWateringDate, Season season) {
+        this.plant = plant;
+        this.lastWateringDate = lastWateringDate;
+        this.nextWateringDate = nextWateringDate;
+        this.season = season;
+    }
+
 }

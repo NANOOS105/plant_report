@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import project.plant_report.domain.plant.Season;
 import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
-import project.plant_report.dto.plant.request.PlantWateringRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 import project.plant_report.service.plant.PlantService;
 
@@ -42,8 +41,8 @@ public class PlantController {
     }
 
     @PostMapping("/water")
-    public ResponseEntity<String> waterPlant (@RequestBody PlantWateringRequestDto request){
-        plantService.waterPlant(request.getId(),request.getSeason());
+    public ResponseEntity<String> waterPlant (@RequestParam Long id, Season season){
+        plantService.waterPlant(id,season);
         return ResponseEntity.ok("Watering saved successfully");
     }
 }

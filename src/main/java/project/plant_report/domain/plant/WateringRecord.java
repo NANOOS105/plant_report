@@ -13,23 +13,19 @@ public class WateringRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 
-    @Enumerated(EnumType.STRING)
-    private Season season;
-
     private LocalDate lastWateringDate;
 
-    private LocalDate nextWateringDate;
+    private String note;
 
     protected WateringRecord(){}
-    public WateringRecord(Plant plant, LocalDate lastWateringDate, LocalDate nextWateringDate, Season season) {
+
+    public WateringRecord(Plant plant, LocalDate lastWateringDate, String note) {
         this.plant = plant;
         this.lastWateringDate = lastWateringDate;
-        this.nextWateringDate = nextWateringDate;
-        this.season = season;
+        this.note = note;
     }
-
 }

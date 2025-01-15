@@ -45,4 +45,10 @@ public class PlantController {
         plantService.waterPlant(id,season);
         return ResponseEntity.ok("Watering saved successfully");
     }
+
+    @PutMapping
+    public ResponseEntity<String> cancelWaterPlant(@RequestParam Long id, Season season){
+        plantService.cancelWaterPlant(id,season);
+        return ResponseEntity.ok("CancelWatering saved successfully");
+    }
 }

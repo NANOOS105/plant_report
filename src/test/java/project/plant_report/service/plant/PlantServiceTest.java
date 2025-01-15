@@ -1,6 +1,7 @@
 package project.plant_report.service.plant;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -9,8 +10,10 @@ import org.mockito.MockitoAnnotations;
 import project.plant_report.domain.plant.Plant;
 import project.plant_report.domain.plant.PlantRepository;
 import project.plant_report.domain.plant.Season;
+import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,35 +38,90 @@ class PlantServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    public void getPlantsTest() throws Exception{
-//        // given
-//        Plant plant1 = new Plant("Monstera", 10, 7, 15,null);
-//        Plant plant2 = new Plant("Ficus", 14, 10, 20,null);
-//        when(plantRepository.findAll()).thenReturn(List.of(plant1, plant2));
-//
-//        // when
-//        List<PlantResponseDto> result = plantService.getPlants();
-//
-//        // then
-//        assertEquals(2, result.size()); // 두 개의 식물이 반환되어야 함
-//        assertEquals(7, result.get(0).getWateringInterval()); // 첫 번째 식물의 여름 간격 확인
-//        assertEquals(10, result.get(1).getWateringInterval()); // 두 번째 식물의 여름 간격 확인
-//     }
+    @Test
+    @DisplayName("식물 등록 TEST")
+    public void savePlant() throws Exception{
+        //given
+        PlantSaveRequestDto request = new PlantSaveRequestDto(
+                "Rose",7,3,null, LocalDate.of(2025,1,1),null
+        );
+        Plant plant = new Plant(
+                request.getName(),
+                request.getCommonInterval(),
+                request.getSummerInterval(),
+                request.getWinterInterval(),
+                request.getLastWateringDate(),
+                request.getUser()
+        );
+        when(plantRepository.save(any(Plant.class))).thenReturn(plant);
+
+        //when
+        plantService.savePlant(request);
+
+        //then
+        verify(plantRepository, times(1)).save(any(Plant.class));
+     }
 
      @Test
-     public void deletePlant() throws Exception{
+     @DisplayName("식물 전체 조회 TEST")
+     public void getPlants() throws Exception{
          //given
-         Long plantId = 1L;
-         Plant plant = new Plant("Monstera", 10, 7, 15,null);
-         when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
+         Plant plant1 = new Plant(
+                 "Rose",7,3,null, LocalDate.of(2025,1,1),null
+         );
+         Plant plant2 = new Plant(
+                 "Tree",10,3,null, LocalDate.of(2024,1,1),null
+         );
+         when(plantRepository.findAll()).thenReturn(List.of(plant1,plant2));
 
          //when
-         plantService.deletePlant(plantId);
+         var plants = plantService.getPlants();
 
          //then
-         verify(plantRepository, times(1)).delete(plant);
+         assertEquals(2,plants.size());
+         assertEquals("Rose",plants.get(0).getName());
+         assertEquals("Tree",plants.get(1).getName());
+         verify(plantRepository,times(1)).findAll();
       }
+
+      @Test
+      @DisplayName("식물 물주기 버튼 TEST")
+      public void waterPlant() throws Exception{
+          //given
+          Long plantId = 1L;
+          Season season = Season.COMMON;
+          Plant plant = new Plant(
+                  "Rose",7,3,null, LocalDate.of(2025,1,1),null
+          );
+          when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
+
+          //when
+          plantService.waterPlant(plantId,season);
+
+          //then
+          assertTrue(plant.getIsWateringRequired());
+          verify(plantRepository,times(1)).findById(plantId);
+       }
+
+    @Test
+    @DisplayName("식물 물주기 취소 TEST")
+    public void cancelWaterPlant() throws Exception{
+        //given
+        Long plantId = 1L;
+        Season season = Season.COMMON;
+        Plant plant = new Plant(
+                "Rose",7,3,null, LocalDate.of(2025,1,1),null
+        );
+        plant.waterPlant(season);
+        when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
+
+        //when
+        plantService.cancelWaterPlant(plantId,season);
+
+        //then
+        assertFalse(plant.getIsWateringRequired());
+        verify(plantRepository,times(1)).findById(plantId);
+    }
 
 
 }

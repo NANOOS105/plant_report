@@ -21,15 +21,17 @@ public class Plant extends DateEntity {
     private String name;
 
     @Column(nullable = false)
-    private Boolean isWateringRequired  = false; // 물 줬는지 여부
+    private Boolean isWateringRequired  = false; // 물 줬으면 true , 물 안줬으면 false
 
-    @Column(nullable = false)
-    private int commonInterval;
+    private LocalDate lastWateringDate;
+    private LocalDate nextWateringDate;
 
+    //계절이 늘어날 수도 있는 것을 고려하여
+    //테이블로 따로 빼서 관리
     @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SeasonalWateringInterval> seasonalIntervals = new ArrayList<>(); // 계절별 물주기
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -39,8 +41,9 @@ public class Plant extends DateEntity {
     //== 생성자 ==
     protected Plant(){}
 
-    public Plant(String name, int commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate) {
+    public Plant(String name, int commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate,User user) {
         this.name = name;
+        this.user = user;
 
         // 공통 물주기 추가
         this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.COMMON, commonInterval));
@@ -53,19 +56,12 @@ public class Plant extends DateEntity {
             this.seasonalIntervals.add(new SeasonalWateringInterval(this, Season.WINTER, winterInterval));
         }
 
-        // 공통 물주기를 이용한 nextWateringDate 기록 추가
-        // null값으로 들어올 경우에는 null로 저장
-        WateringRecord record;
+        // 초기 물주기 상태 설정
         if (lastWateringDate != null) {
-            LocalDate nextWateringDate = lastWateringDate.plusDays(commonInterval);
-            record = new WateringRecord(this, lastWateringDate, nextWateringDate, Season.COMMON);
-            this.isWateringRequired = lastWateringDate.plusDays(commonInterval).isBefore(LocalDate.now());
-        } else {
-            record= new WateringRecord(this, lastWateringDate, null, Season.COMMON);
-            this.isWateringRequired = false;
+            this.lastWateringDate = lastWateringDate;
+            this.nextWateringDate = lastWateringDate.plusDays(commonInterval);
+            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
         }
-
-        this.wateringRecords.add(record);
 
     }
 
@@ -74,13 +70,15 @@ public class Plant extends DateEntity {
     // 업데이트는 엔터티의 상태를 변경하는 작업이기 때문에
     // 엔터티 내부에서 캡슐화해서 처리
     public void updatePlant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval) {
-        if (name != null && !name.isBlank()) {
-            this.name = name; // 이름 변경
-        }
-        if (commonInterval != null) {
-            this.commonInterval = commonInterval; // 공통 물주기 간격 변경
-        }
 
+        // 이름 변경
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
+        // 공통 물주기 간격 변경
+        if (commonInterval != null) {
+            updateSeasonalInterval(Season.COMMON, commonInterval);
+        }
         // 계절별 물주기 변경
         if (summerInterval != null) {
             updateSeasonalInterval(Season.SUMMER, summerInterval);
@@ -90,6 +88,8 @@ public class Plant extends DateEntity {
         }
     }
 
+    //계절에 따라 물주기 변경 로직
+    //데이터가 있으면 업데이트, 없을 때만 새로 생성
     private void updateSeasonalInterval(Season season, int wateringInterval) {
         this.seasonalIntervals.stream()
                 .filter(seasonalInterval -> seasonalInterval.getSeason() == season) // 계절 필터
@@ -102,30 +102,25 @@ public class Plant extends DateEntity {
 
     // 물주기 버튼 로직
     public void waterPlant(Season season) {
-        SeasonalWateringInterval interval = findIntervalBySeason(season);
         LocalDate today = LocalDate.now();
-        int wateringInterval = interval.getWateringInterval();
 
-        // 다음 물 주는 날짜 계산
-        LocalDate nextWateringDate = today.plusDays(wateringInterval);
+        // 마지막 물준 날짜와 다음 물주기 날짜 갱신
+        this.lastWateringDate = today;
+        int interval = findIntervalBySeason(season).getWateringInterval();
+        this.nextWateringDate = today.plusDays(interval);
 
-        // 기록 추가
-        WateringRecord record = new WateringRecord(this, today, nextWateringDate, season);
-        this.wateringRecords.add(record);
+        // 물 준 기록 추가
+        this.wateringRecords.add(new WateringRecord(this, today, null));
 
-        // 물 준 상태 업데이트
-        this.isWateringRequired  = true;
-    }
-
-    private SeasonalWateringInterval findIntervalBySeason(Season season) {
-        return seasonalIntervals.stream()
-                .filter(interval -> interval.getSeason() == season)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Season not found: " + season));
+        // 물 준 상태 변경
+        this.isWateringRequired = true;
     }
 
     // 물주기 취소 로직
-    public void cancelLastWaterPlant() {
+    public void cancelLastWaterPlant(Season season) {
+
+        int interval = findIntervalBySeason(season).getWateringInterval();
+
         if (wateringRecords.isEmpty()) {
             throw new IllegalStateException("No watering records to cancel.");
         }
@@ -137,11 +132,27 @@ public class Plant extends DateEntity {
         if (wateringRecords.isEmpty()) {
             this.isWateringRequired  = false;
         } else {
-            LocalDate lastWateringDate = wateringRecords.get(wateringRecords.size() - 1).getLastWateringDate();
-            LocalDate nextWateringDate = wateringRecords.get(wateringRecords.size() - 1).getNextWateringDate();
+            this.lastWateringDate = wateringRecords.get(wateringRecords.size() - 1).getLastWateringDate();
+            this.nextWateringDate = lastWateringDate.plusDays(interval);
             this.isWateringRequired  = lastWateringDate.isBefore(nextWateringDate);
         }
     }
 
+    //계절별 물주기 찾기 로직
+    public SeasonalWateringInterval findIntervalBySeason(Season season) {
+        return seasonalIntervals.stream()
+                .filter(interval -> interval.getSeason() == season)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Season not found: " + season));
+    }
+
+    //다음 물주기 날짜 찾는 로직
+    public LocalDate calNextWateringdate(Plant plant ,Season season){
+        SeasonalWateringInterval interval = plant.findIntervalBySeason(season);
+        LocalDate today = LocalDate.now();
+        int wateringInterval = interval.getWateringInterval();
+        LocalDate nextWateringDate = today.plusDays(wateringInterval);
+        return  nextWateringDate;
+    }
 }
 

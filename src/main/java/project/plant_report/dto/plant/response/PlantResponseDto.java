@@ -3,20 +3,24 @@ package project.plant_report.dto.plant.response;
 import lombok.Getter;
 import project.plant_report.domain.plant.Plant;
 import project.plant_report.domain.plant.Season;
+import project.plant_report.domain.plant.SeasonalWateringInterval;
+
+import java.time.LocalDate;
 
 @Getter
 public class PlantResponseDto {
     private Long id;
     private String name;
-    private int wateringInterval; // 현재 계절에 맞는 물주기 간격
-    private String nextWateringDate; // 다음 물주기 날짜
-    private Season season;
+    private LocalDate lastWateringDate; // 마지막 물준 날짜
+    private LocalDate nextWateringDate; // 다음 물주기 날짜
+    private boolean isWateringRequired;
 
-    public PlantResponseDto(Plant plant, int wateringInterval, String nextWateringDate, Season season) {
+    public PlantResponseDto(Plant plant){
+
         this.id = plant.getId();
         this.name = plant.getName();
-        this.wateringInterval = wateringInterval;
-        this.nextWateringDate = nextWateringDate;
-        this.season = season;
+        this.lastWateringDate = plant.getLastWateringDate();
+        this.nextWateringDate = plant.getNextWateringDate();
+        this.isWateringRequired = plant.getIsWateringRequired();
     }
 }

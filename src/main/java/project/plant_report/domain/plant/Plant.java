@@ -60,7 +60,7 @@ public class Plant extends DateEntity {
         if (lastWateringDate != null) {
             this.lastWateringDate = lastWateringDate;
             this.nextWateringDate = lastWateringDate.plusDays(commonInterval);
-            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
+            this.isWateringRequired = lastWateringDate.isAfter(this.nextWateringDate);
         }
 
     }

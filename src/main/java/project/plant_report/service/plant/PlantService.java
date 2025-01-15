@@ -73,7 +73,7 @@ public class PlantService {
 
     // 물주기 취소
     @Transactional
-    public void cancelWatering(Long plantId, Season season) {
+    public void cancelWaterPlant(Long plantId, Season season) {
         Plant plant = plantRepository.findById(plantId)
                 .orElseThrow(() -> new PlantNotFoundException(plantId));
         plant.cancelLastWaterPlant(season);

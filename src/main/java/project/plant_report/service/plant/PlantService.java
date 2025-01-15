@@ -30,7 +30,9 @@ public class PlantService {
                 request.getName(),
                 request.getCommonInterval(),
                 request.getSummerInterval(),
-                request.getWinterInterval()
+                request.getWinterInterval(),
+                request.getLastWateringDate(),
+                request.getUser()
         );
 
         plantRepository.save(plant);
@@ -38,13 +40,9 @@ public class PlantService {
 
     //식물 조회 서비스
     @Transactional(readOnly = true)
-    public List<PlantResponseDto> getPlants(Season currentSeason) {
+    public List<PlantResponseDto> getPlants() {
         return plantRepository.findAll().stream()
-                .map(plant -> {
-                    int wateringInternal = plant.getIntervalForSeason(currentSeason);
-                    String nextWateringDate = calNextWateringDate(wateringInternal);
-                    return new PlantResponseDto(plant, wateringInternal, nextWateringDate, currentSeason);
-                })
+                .map(PlantResponseDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -65,10 +63,21 @@ public class PlantService {
 
     }
 
-    //다음 물주기 날짜 계산
-    private String calNextWateringDate(int wateringInterval) {
-        LocalDate today = LocalDate.now(); // 오늘 날짜
-        LocalDate nextWateringDate = today.plusDays(wateringInterval); // 물주기 간격만큼 더함
-        return nextWateringDate.toString(); // 날짜를 문자열로 반환
+    // 물주기
+    @Transactional
+    public void waterPlant(Long plantId, Season season) {
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new PlantNotFoundException(plantId));
+        plant.waterPlant(season);
     }
+
+    // 물주기 취소
+    @Transactional
+    public void cancelWatering(Long plantId, Season season) {
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new PlantNotFoundException(plantId));
+        plant.cancelLastWaterPlant(season);
+    }
+
+
 }

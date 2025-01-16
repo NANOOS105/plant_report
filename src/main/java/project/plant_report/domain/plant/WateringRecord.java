@@ -17,6 +17,7 @@ public class WateringRecord {
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 
+    @Column(nullable = false)
     private LocalDate lastWateringDate;
 
     private String note;

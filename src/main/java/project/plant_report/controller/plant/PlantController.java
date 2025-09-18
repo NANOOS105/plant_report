@@ -1,6 +1,11 @@
 package project.plant_report.controller.plant;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.plant_report.domain.plant.Season;
@@ -28,8 +33,10 @@ public class PlantController {
     }
 
     @GetMapping
-    public List<PlantResponseDto> getPlants(@RequestParam(required = false) String status){
-        return plantService.getPlants(status);
+    public Page<PlantResponseDto> getPlants(
+            @RequestParam(required = false) String status,
+            @ParameterObject @PageableDefault(size = 20, sort = "nextWateringDate", direction = Sort.Direction.ASC) Pageable pageable){
+        return plantService.getPlants(status, pageable);
     }
 
     @PutMapping("/{id}")

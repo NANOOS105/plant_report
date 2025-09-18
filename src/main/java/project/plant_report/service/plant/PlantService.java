@@ -1,5 +1,7 @@
 package project.plant_report.service.plant;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.plant_report.domain.plant.Plant;
@@ -39,12 +41,12 @@ public class PlantService {
     }
 
     //식물 조회 서비스
-    @Transactional(readOnly = true) // 플러시, 더티체킹 방지
+    @Transactional(readOnly = true) // 플러시, 더티체킹 방지 -> 조ㅚ 전용 메서드로 불필요한 업데이트 방지
     public Page<PlantResponseDto> getPlants(String status, Pageable pageable) {
-        Page<Plant> page = "wateringRequired".equals(status)
-        ? plantRepository.findByNextWaterAtLessThanEqual(LocalDate.now(), pageable)
-        : plantRepository.findAll(pageable);
-    return page.map(PlantResponseDto::new);
+        Page<Plant> page = "wateringRequired".equals(status) //NPE 방지
+                ? plantRepository.findByNextWateringDateLessThanEqual(LocalDate.now(), pageable)
+                : plantRepository.findAll(pageable);
+        return page.map(PlantResponseDto::new);
     }
 
     //식물 수정 서비스

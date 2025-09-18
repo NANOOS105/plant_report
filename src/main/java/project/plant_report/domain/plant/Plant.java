@@ -1,6 +1,7 @@
 package project.plant_report.domain.plant;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
 import lombok.Getter;
 import project.plant_report.domain.common.DateEntity;
 import project.plant_report.domain.user.User;
@@ -10,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idxNextWateringDate", columnList = "nextWateringDate")
+})
 @Getter
 public class Plant extends DateEntity {
 
@@ -24,6 +28,7 @@ public class Plant extends DateEntity {
     private Boolean isWateringRequired  = false; // 물 줬으면 true , 물 안줬으면 false
 
     private LocalDate lastWateringDate;
+    @Column
     private LocalDate nextWateringDate;
 
     //계절이 늘어날 수도 있는 것을 고려하여

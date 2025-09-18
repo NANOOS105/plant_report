@@ -14,8 +14,6 @@ import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 import project.plant_report.service.plant.PlantService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/plant")
 public class PlantController {

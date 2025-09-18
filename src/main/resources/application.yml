@@ -2,11 +2,8 @@ spring:
   # .env import
   config:
     import: optional:file:.env[.properties]
-  datasource:
-    url: ${dbURL}
-    username: "root"
-    password: ${dbPassword}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,5 +11,4 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false

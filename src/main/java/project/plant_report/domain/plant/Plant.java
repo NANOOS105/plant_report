@@ -41,7 +41,7 @@ public class Plant extends DateEntity {
     //== 생성자 ==
     protected Plant(){}
 
-    public Plant(String name, int commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate,User user) {
+    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate,User user) {
         this.name = name;
         this.user = user;
 

@@ -1,5 +1,6 @@
 package project.plant_report.controller.plant;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.plant_report.domain.plant.Season;
@@ -21,34 +22,37 @@ public class PlantController {
     }
 
     @PostMapping
-    public void savePlant(@RequestBody PlantSaveRequestDto request){
+    public ResponseEntity<Void> savePlant(@Valid @RequestBody PlantSaveRequestDto request){
         plantService.savePlant(request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public List<PlantResponseDto> getPlants(){
-        return plantService.getPlants();
+    public List<PlantResponseDto> getPlants(@RequestParam(required = false) String status){
+        return plantService.getPlants(status);
     }
 
-    @PutMapping
-    public void updatePlant(@RequestBody PlantUpdateRequestDto request){
-        plantService.updatePlant(request);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePlant(@PathVariable Long id, @Valid @RequestBody PlantUpdateRequestDto request){
+        plantService.updatePlant(id, request);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
-    public void deletePlant(@RequestParam Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePlant(@PathVariable Long id){
         plantService.deletePlant(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/water")
-    public ResponseEntity<String> waterPlant (@RequestParam Long id, Season season){
+    @PostMapping("/{id}/water")
+    public ResponseEntity<Void> waterPlant (@PathVariable Long id, @RequestParam Season season){
         plantService.waterPlant(id,season);
-        return ResponseEntity.ok("Watering saved successfully");
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<String> cancelWaterPlant(@RequestParam Long id, Season season){
+    @PutMapping("/{id}/cancelWater")
+    public ResponseEntity<Void> cancelWaterPlant(@PathVariable Long id, @RequestParam Season season){
         plantService.cancelWaterPlant(id,season);
-        return ResponseEntity.ok("CancelWatering saved successfully");
+        return ResponseEntity.noContent().build();
     }
 }

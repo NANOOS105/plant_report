@@ -39,18 +39,19 @@ public class PlantService {
     }
 
     //식물 조회 서비스
-    @Transactional(readOnly = true)
-    public List<PlantResponseDto> getPlants() {
-        return plantRepository.findAll().stream()
-                .map(PlantResponseDto::new)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true) // 플러시, 더티체킹 방지
+    public Page<PlantResponseDto> getPlants(String status, Pageable pageable) {
+        Page<Plant> page = "wateringRequired".equals(status)
+        ? plantRepository.findByNextWaterAtLessThanEqual(LocalDate.now(), pageable)
+        : plantRepository.findAll(pageable);
+    return page.map(PlantResponseDto::new);
     }
 
     //식물 수정 서비스
     @Transactional
-    public void updatePlant(PlantUpdateRequestDto request) {
-        Plant plant = plantRepository.findById(request.getId())
-                .orElseThrow(() -> new PlantNotFoundException(request.getId()));
+    public void updatePlant(Long id, PlantUpdateRequestDto request) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new PlantNotFoundException(id));
         plant.updatePlant(request.getName(), request.getCommonInterval(),request.getSummerInterval(), request.getWinterInterval());
     }
 

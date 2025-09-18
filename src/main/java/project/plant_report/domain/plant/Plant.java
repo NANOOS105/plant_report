@@ -70,6 +70,11 @@ public class Plant extends DateEntity {
 
     }
 
+    // 테스트 및 편의용 생성자 (기존 테스트 시그니처 호환)
+    public Plant(String name, int commonInterval, int summerInterval, Integer winterInterval) {
+        this(name, Integer.valueOf(commonInterval), Integer.valueOf(summerInterval), winterInterval, null, null);
+    }
+
     //====비즈니스 로직=====
     // 식물 업데이트
     // 업데이트는 엔터티의 상태를 변경하는 작업이기 때문에
@@ -149,6 +154,11 @@ public class Plant extends DateEntity {
                 .filter(interval -> interval.getSeason() == season)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Season not found: " + season));
+    }
+
+    // 테스트 호환용: 특정 계절의 물주기 간격 반환
+    public int getIntervalForSeason(Season season) {
+        return findIntervalBySeason(season).getWateringInterval();
     }
 
     //다음 물주기 날짜 찾는 로직

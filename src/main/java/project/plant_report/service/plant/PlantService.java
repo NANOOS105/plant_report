@@ -14,7 +14,6 @@ import project.plant_report.exception.PlantNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PlantService {
@@ -47,6 +46,12 @@ public class PlantService {
                 ? plantRepository.findByNextWateringDateLessThanEqual(LocalDate.now(), pageable)
                 : plantRepository.findAll(pageable);
         return page.map(PlantResponseDto::new);
+    }
+
+    // 기존 테스트/호출 호환용: 전체 목록 조회(List 반환)
+    @Transactional(readOnly = true)
+    public List<PlantResponseDto> getPlants() {
+        return getPlants(null, Pageable.unpaged()).getContent();
     }
 
     //식물 수정 서비스

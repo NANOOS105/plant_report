@@ -1,0 +1,45 @@
+---
+# Project Context
+STACK: Next.js (App Router, TS), Tailwind, React Query, Axios, Spring Boot (JPA)
+GOAL: 식물 물주기 앱. 프론트/백 분리(CORS 사용). 모노레포(backend/, frontend/).
+
+# General Rules
+- 컨트롤러 입출력은 항상 DTO. 엔티티 직렬화 금지.
+- HTTP 규약: GET=200, POST=201(+Location), PUT/PATCH/DELETE=204 또는 일관된 200.
+- 에러: 백엔드 전역 핸들러 → 표준 에러 포맷(message, code, fieldErrors).
+- 프론트는 오류를 사용자 메시지로 변환하고(토스트), 콘솔엔 상세 로그.
+
+# TypeScript / Code Style
+- "no implicit any" 유지. 함수 30줄 넘으면 분리. 주석은 “왜”만.
+- 절대경로 import(@/*). api/dto 타입은 한 파일에서 export.
+
+# Next.js (App Router)
+- 페이지 폴더마다 loading.tsx, error.tsx, not-found.tsx 사용.
+- 데이터 패칭은 서버 컴포넌트(읽기) or 클라에서 React Query(쓰기).
+- SSG: 변동 적고 공개 컨텐츠. SSR/CSR: 사용자별 데이터/자주 변동.
+
+# Tailwind
+- 레이아웃: grid/flex, gap 사용. 버튼/카드 컴포넌트화. 클래스 중복 피하기.
+
+# React Query
+- 목록/상세는 useQuery, 생성/수정/삭제는 useMutation + invalidateQueries.
+- optimistic update는 필요한 경우에만. 204 응답은 json 파싱하지 말 것.
+
+# Axios
+- 공용 인스턴스(baseURL=http://localhost:8080/api, Content-Type: json).
+- 응답 인터셉터로 에러 메시지 표준화.
+
+# CORS (dev)
+- Origin: http://localhost:3000.
+- Spring Security: http.cors(). credentials true면 allowedOrigins는 정확히 명시.
+
+# Spring (JPA)
+- @Transactional 경계 명확히. 읽기 전용 readOnly=true.
+- N+1 회피(fetch join/EntityGraph). 페이징 시 count 쿼리 점검.
+- 인덱스: 조회 조건/외래키 기준으로 설계.
+
+# Git/PR
+- 커밋: feat/fix/refactor/chore/test/docs 스타일, 스코프 사용.
+- PR 템플릿: 변경 요약, 스크린샷, 테스트 방법, 체크리스트 포함.
+
+---

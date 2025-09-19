@@ -16,6 +16,9 @@ import project.plant_report.dto.plant.response.PlantResponseDto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -72,7 +75,7 @@ class PlantServiceTest {
          Plant plant2 = new Plant(
                  "Tree",10,3,null, LocalDate.of(2024,1,1),null
          );
-         when(plantRepository.findAll()).thenReturn(List.of(plant1,plant2));
+         when(plantRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(plant1,plant2)));
 
          //when
          var plants = plantService.getPlants();
@@ -81,7 +84,7 @@ class PlantServiceTest {
          assertEquals(2,plants.size());
          assertEquals("Rose",plants.get(0).getName());
          assertEquals("Tree",plants.get(1).getName());
-         verify(plantRepository,times(1)).findAll();
+         verify(plantRepository,times(1)).findAll(any(Pageable.class));
       }
 
       @Test

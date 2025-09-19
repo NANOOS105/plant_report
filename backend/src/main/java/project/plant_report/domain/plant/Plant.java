@@ -153,7 +153,13 @@ public class Plant extends DateEntity {
         return seasonalIntervals.stream()
                 .filter(interval -> interval.getSeason() == season)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Season not found: " + season));
+                .orElseGet(() -> {
+                    // 해당 계절이 없으면 COMMON 계절을 기본값으로 사용
+                    return seasonalIntervals.stream()
+                            .filter(interval -> interval.getSeason() == Season.COMMON)
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException("COMMON season not found"));
+                });
     }
 
     // 테스트 호환용: 특정 계절의 물주기 간격 반환

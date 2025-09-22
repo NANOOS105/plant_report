@@ -9,8 +9,10 @@ const notoSans = Noto_Sans_KR({
   display: "swap", //임시 폰트 먼저 보여주고 폰트 로드
 });
 
+console.log("API =", process.env.NEXT_PUBLIC_API_URL);
+
 export const metadata: Metadata = {
-  title: "Plant Report | 내 식물 물주기",
+  title: "Plant Report | 식물기록",
   description: "물주기 일정/기록을 한 눈에",
 };
 

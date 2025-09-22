@@ -13,7 +13,9 @@ import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
 import project.plant_report.service.plant.PlantService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/plant")
 public class PlantController {

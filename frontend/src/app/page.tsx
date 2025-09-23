@@ -23,7 +23,7 @@ export default function HomePage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">물줘야 하는 식물들</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-900">PLANT REPORT HOME</h1>
       
       {wateringRequired?.content.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">

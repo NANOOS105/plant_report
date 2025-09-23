@@ -26,7 +26,7 @@ public class PlantSaveRequestDto {
     
     private LocalDate lastWateringDate; //마지막으로 물 준 날짜 (선택적)
     
-    @NotNull(message = "사용자 정보는 필수입니다")
+    // @NotNull(message = "사용자 정보는 필수입니다") // 임시로 주석 처리
     private User user;
 
     public PlantSaveRequestDto(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, User user) {

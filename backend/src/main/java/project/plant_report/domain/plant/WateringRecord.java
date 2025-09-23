@@ -20,9 +20,18 @@ public class WateringRecord {
     @Column(nullable = false)
     private LocalDate lastWateringDate;
 
+    @Enumerated(EnumType.STRING)
+    private Season season;
+
     private String note;
 
     protected WateringRecord(){}
+
+    public WateringRecord(Plant plant, LocalDate lastWateringDate, Season season) {
+        this.plant = plant;
+        this.lastWateringDate = lastWateringDate;
+        this.season = season;
+    }
 
     public WateringRecord(Plant plant, LocalDate lastWateringDate, String note) {
         this.plant = plant;

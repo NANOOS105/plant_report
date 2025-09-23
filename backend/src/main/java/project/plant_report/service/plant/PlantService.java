@@ -40,15 +40,15 @@ public class PlantService {
     }
 
     //식물 조회 서비스
-    @Transactional(readOnly = true) // 플러시, 더티체킹 방지 -> 조ㅚ 전용 메서드로 불필요한 업데이트 방지
+    @Transactional(readOnly = true)
     public Page<PlantResponseDto> getPlants(String status, Pageable pageable) {
-        Page<Plant> page = "wateringRequired".equals(status) //NPE 방지
+        Page<Plant> page = "wateringRequired".equals(status)
                 ? plantRepository.findByNextWateringDateLessThanEqual(LocalDate.now(), pageable)
                 : plantRepository.findAll(pageable);
         return page.map(PlantResponseDto::new);
     }
 
-    // 기존 테스트/호출 호환용: 전체 목록 조회(List 반환)
+    // 테스트 호환용: 인자 없는 getPlants 오버로드
     @Transactional(readOnly = true)
     public List<PlantResponseDto> getPlants() {
         return getPlants(null, Pageable.unpaged()).getContent();
@@ -59,16 +59,15 @@ public class PlantService {
     public void updatePlant(Long id, PlantUpdateRequestDto request) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException(id));
-        plant.updatePlant(request.getName(), request.getCommonInterval(),request.getSummerInterval(), request.getWinterInterval());
+        plant.updatePlant(request.getName(), request.getCommonInterval(), request.getSummerInterval(), request.getWinterInterval());
     }
 
     //식물 삭제 서비스
     @Transactional
     public void deletePlant(Long id) {
         Plant plant = plantRepository.findById(id)
-                .orElseThrow(()->new PlantNotFoundException(id));
+                .orElseThrow(() -> new PlantNotFoundException(id));
         plantRepository.delete(plant);
-
     }
 
     // 물주기
@@ -86,6 +85,4 @@ public class PlantService {
                 .orElseThrow(() -> new PlantNotFoundException(plantId));
         plant.cancelLastWaterPlant(season);
     }
-
-
 }

@@ -40,7 +40,7 @@ export default function RootLayout({
                   </Link>
                 </li>
                 <li>
-                  <Link href="/plants" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
+                  <Link href="/plantList" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
                     📋 식물 목록
                   </Link>
                 </li>

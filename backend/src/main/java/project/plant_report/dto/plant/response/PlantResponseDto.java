@@ -3,7 +3,6 @@ package project.plant_report.dto.plant.response;
 import lombok.Getter;
 import project.plant_report.domain.plant.Plant;
 import project.plant_report.domain.plant.Season;
-import project.plant_report.domain.plant.SeasonalWateringInterval;
 
 import java.time.LocalDate;
 

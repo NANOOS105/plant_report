@@ -53,7 +53,7 @@ export default function RootLayout({
             </nav>
             
             {/* 메인 내용 */}
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-6 bg-white">
               {children}
             </main>
           </div>

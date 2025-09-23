@@ -24,9 +24,9 @@ export default function RegisterPage() {
       const plantData = {
         name: formData.name,
         commonInterval: parseInt(formData.commonInterval),
-        summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined,
-        winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined,
-        lastWateringDate: formData.lastWateringDate || undefined,
+        summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined, // 빈 값은 undefined
+        winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined, // 빈 값은 undefined
+        lastWateringDate: formData.lastWateringDate || undefined, // 빈 값은 undefined
         user: null, // 임시로 null (나중에 사용자 인증 추가)
       };
 

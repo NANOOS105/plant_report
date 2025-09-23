@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers/query-client";
+import Link from "next/link";
 
 const notoSans = Noto_Sans_KR({
   variable: "--font-sans",
@@ -21,10 +22,42 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body
-        className={`${notoSans.variable} antialiased bg-gray-50 text-gray-900`}
-      >
-        <Providers>{children}</Providers>
+      <body className={`${notoSans.variable} antialiased bg-gray-50 text-gray-900`}>
+        <Providers>
+          <div className="flex min-h-screen">
+            {/* 왼쪽 네비게이션 */}
+            <nav className="w-64 bg-white shadow-md p-4">
+              <h1 className="text-xl font-bold mb-6 text-green-600">🌱 PLANT REPORT</h1>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
+                    🏠 HOME
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/register" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
+                    ➕ 식물 등록
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/plants" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
+                    📋 식물 목록
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/settings" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
+                    ⚙️ 설정
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            
+            {/* 메인 내용 */}
+            <main className="flex-1 p-6">
+              {children}
+            </main>
+          </div>
+        </Providers>
       </body>
     </html>
   );

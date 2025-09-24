@@ -1,12 +1,15 @@
 'use client';
 
 import { usePlants, useWaterPlant, useUpdatePlant, useDeletePlant, useCancelWaterPlant } from '@/hooks/usePlants';
-import { Season } from '@/types/plant';
+import { useSeason } from '@/contexts/SeasonContext';
 import Link from 'next/link';
 
 export default function PlantListPage() {
   // 모든 식물 목록 가져오기
   const { data: plants, isLoading, error } = usePlants();
+  
+  // 현재 계절
+  const { currentSeason } = useSeason();
   
   // 물주기 함수
   const waterPlantMutation = useWaterPlant();
@@ -26,7 +29,7 @@ export default function PlantListPage() {
 
   // 물주기 버튼 클릭
   const handleWaterPlant = (plantId: number) => {
-    waterPlantMutation.mutate({ id: plantId, season: 'COMMON' });
+    waterPlantMutation.mutate({ id: plantId, season: currentSeason });
   };
 
   // 삭제 버튼 클릭
@@ -44,7 +47,7 @@ export default function PlantListPage() {
   // 물주기 취소 버튼 클릭
   const handleCancelWaterPlant = (plantId: number) => {
     console.log('물주기 취소 버튼 클릭:', plantId);
-    cancelWaterPlantMutation.mutate({ id: plantId, season: 'COMMON' });
+    cancelWaterPlantMutation.mutate({ id: plantId, season: currentSeason });
   };
 
   return (

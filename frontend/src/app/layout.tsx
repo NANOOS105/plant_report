@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers/query-client";
 import { SeasonProvider } from "@/contexts/SeasonContext";
+import SeasonSelector from "@/components/SeasonSelector";
 import Link from "next/link";
 
 const notoSans = Noto_Sans_KR({
@@ -23,12 +24,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${notoSans.variable} antialiased bg-gray-50 text-gray-900`}>
-        <Providers>
-          <div className="flex min-h-screen">
+              <body className={`${notoSans.variable} antialiased bg-gray-50 text-gray-900`}>
+                <Providers>
+                  <SeasonProvider>
+                    <div className="flex min-h-screen">
             {/* 왼쪽 네비게이션 */}
             <nav className="w-64 bg-white shadow-md p-4">
               <h1 className="text-xl font-bold mb-6 text-green-600">🌱 PLANT REPORT</h1>
+              
+              {/* 계절 선택기 */}
+              <div className="mb-6">
+                <SeasonSelector />
+              </div>
+              
               <ul className="space-y-2">
                 <li>
                   <Link href="/" className="block p-2 rounded hover:bg-gray-100 text-gray-900">
@@ -56,10 +64,11 @@ export default function RootLayout({
             {/* 메인 내용 */}
             <main className="flex-1 p-6 bg-white">
               {children}
-            </main>
-          </div>
-        </Providers>
-      </body>
+                    </main>
+                    </div>
+                  </SeasonProvider>
+                </Providers>
+              </body>
     </html>
   );
 }

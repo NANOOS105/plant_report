@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers/query-client";
+import { SeasonProvider } from "@/contexts/SeasonContext";
 import Link from "next/link";
 
 const notoSans = Noto_Sans_KR({

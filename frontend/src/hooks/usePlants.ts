@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPlants, savePlant, waterPlant, updatePlant, deletePlant } from '@/lib/api';
+import { getPlants, savePlant, waterPlant, updatePlant, deletePlant, cancelWaterPlant } from '@/lib/api';
 import { Plant, PlantSaveRequest, PlantUpdateRequest, Season } from '@/types/plant';
 
 // 식물 목록 조회
@@ -57,6 +57,19 @@ export const useDeletePlant = () => {
     mutationFn: (id: number) => deletePlant(id),
     onSuccess: () => {
       // 삭제 성공 시 목록 새로고침
+      queryClient.invalidateQueries({ queryKey: ['plants'] });
+    },
+  });
+};
+
+// 물주기 취소
+export const useCancelWaterPlant = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ id, season }: { id: number; season: Season }) => cancelWaterPlant(id, season),
+    onSuccess: () => {
+      // 취소 성공 시 목록 새로고침
       queryClient.invalidateQueries({ queryKey: ['plants'] });
     },
   });

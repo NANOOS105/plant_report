@@ -44,3 +44,9 @@ export const deletePlant = async (id: number) => {
   const response = await api.delete(`/plant/${id}`);
   return response.data;
 };
+
+// 7. 물주기 취소 함수
+export const cancelWaterPlant = async (id: number, season: Season) => {
+  const response = await api.put(`/plant/${id}/cancelWater?season=${season}`);
+  return response.data;
+};

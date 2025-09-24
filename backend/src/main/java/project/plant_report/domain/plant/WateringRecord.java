@@ -23,19 +23,11 @@ public class WateringRecord {
     @Enumerated(EnumType.STRING)
     private Season season;
 
-    private String note;
-
     protected WateringRecord(){}
 
     public WateringRecord(Plant plant, LocalDate lastWateringDate, Season season) {
         this.plant = plant;
         this.lastWateringDate = lastWateringDate;
         this.season = season;
-    }
-
-    public WateringRecord(Plant plant, LocalDate lastWateringDate, String note) {
-        this.plant = plant;
-        this.lastWateringDate = lastWateringDate;
-        this.note = note;
     }
 }

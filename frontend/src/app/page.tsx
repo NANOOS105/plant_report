@@ -1,6 +1,6 @@
 'use client';
 
-import { usePlants, useWaterPlant } from '@/hooks/usePlants';
+import { usePlants, useWaterPlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { Season } from '@/types/plant';
 
 export default function HomePage() {
@@ -9,6 +9,9 @@ export default function HomePage() {
   
   // 물주기 함수
   const waterPlantMutation = useWaterPlant();
+  
+  // 물주기 취소 함수
+  const cancelWaterPlantMutation = useCancelWaterPlant();
 
   // 로딩 중일 때
   if (isLoading) return <div>로딩 중...</div>;
@@ -19,6 +22,11 @@ export default function HomePage() {
   // 물주기 버튼 클릭
   const handleWaterPlant = (plantId: number) => {
     waterPlantMutation.mutate({ id: plantId, season: 'COMMON' });
+  };
+
+  // 물주기 취소 버튼 클릭
+  const handleCancelWaterPlant = (plantId: number) => {
+    cancelWaterPlantMutation.mutate({ id: plantId, season: 'COMMON' });
   };
 
   return (
@@ -32,10 +40,11 @@ export default function HomePage() {
           
           <button
             onClick={() => handleWaterPlant(plant.id)}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+            className="bg-blue-500 text-white p-2 rounded mt-2 text-lg"
             disabled={waterPlantMutation.isPending}
+            title={waterPlantMutation.isPending ? '물주는 중...' : '물주기'}
           >
-            {waterPlantMutation.isPending ? '물주는 중...' : '물주기'}
+            💧
           </button>
         </div>
       ))}

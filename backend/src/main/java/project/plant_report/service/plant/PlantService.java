@@ -35,7 +35,6 @@ public class PlantService {
                 request.getLastWateringDate(),
                 request.getUser()
         );
-
         plantRepository.save(plant);
     }
 

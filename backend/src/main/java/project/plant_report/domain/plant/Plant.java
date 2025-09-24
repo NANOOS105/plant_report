@@ -56,6 +56,10 @@ public class Plant extends DateEntity {
             this.lastWateringDate = lastWateringDate;
             this.nextWateringDate = lastWateringDate.plusDays(commonInterval);
             this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
+            
+            // 초기 물주기 기록 생성
+            WateringRecord initialRecord = new WateringRecord(this, lastWateringDate, Season.COMMON);
+            this.wateringRecords.add(initialRecord);
         } else {
             this.lastWateringDate = null;
             this.nextWateringDate = null;
@@ -101,27 +105,37 @@ public class Plant extends DateEntity {
 
     // 마지막 물주기 취소
     public void cancelLastWaterPlant(Season season) {
+        System.out.println("=== 물주기 취소 시작 ===");
+        System.out.println("현재 물주기 기록 수: " + this.wateringRecords.size());
+        
         if (this.wateringRecords.isEmpty()) {
             throw new IllegalStateException("취소할 물주기 기록이 없습니다.");
         }
         
         // 마지막 기록 제거
         WateringRecord lastRecord = this.wateringRecords.remove(this.wateringRecords.size() - 1);
+        System.out.println("제거된 기록: " + lastRecord.getLastWateringDate() + " (" + lastRecord.getSeason() + ")");
         
         // 이전 상태로 복원
         if (this.wateringRecords.isEmpty()) {
+            System.out.println("모든 기록 제거됨 - 초기 상태로 복원");
             this.lastWateringDate = null;
             this.nextWateringDate = null;
             this.isWateringRequired = false;
         } else {
             // 이전 기록으로 상태 복원
             WateringRecord previousRecord = this.wateringRecords.get(this.wateringRecords.size() - 1);
+            System.out.println("이전 기록으로 복원: " + previousRecord.getLastWateringDate() + " (" + previousRecord.getSeason() + ")");
+            
             this.lastWateringDate = previousRecord.getLastWateringDate();
             
             Integer interval = getIntervalForSeason(previousRecord.getSeason());
             this.nextWateringDate = this.lastWateringDate.plusDays(interval);
             this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
+            
+            System.out.println("복원된 상태 - 마지막 물주기: " + this.lastWateringDate + ", 다음 물주기: " + this.nextWateringDate + ", 물주기 필요: " + this.isWateringRequired);
         }
+        System.out.println("=== 물주기 취소 완료 ===");
     }
 
     // 계절에 따른 물주기 간격 반환

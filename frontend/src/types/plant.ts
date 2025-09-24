@@ -5,6 +5,9 @@ export interface Plant {
   lastWateringDate?: string; // ISO 날짜 문자열
   nextWateringDate?: string; // ISO 날짜 문자열
   isWateringRequired: boolean;
+  commonInterval?: number;
+  summerInterval?: number;
+  winterInterval?: number;
 }
 
 // 백엔드 PlantSaveRequestDto와 일치하는 타입

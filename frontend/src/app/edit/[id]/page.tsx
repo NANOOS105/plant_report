@@ -31,9 +31,9 @@ export default function EditPlantPage() {
     if (currentPlant) {
       setFormData({
         name: currentPlant.name,
-        commonInterval: '', // 이 정보는 백엔드에 저장되지 않으므로 빈 값
-        summerInterval: '', // 이 정보는 백엔드에 저장되지 않으므로 빈 값
-        winterInterval: '', // 이 정보는 백엔드에 저장되지 않으므로 빈 값
+        commonInterval: currentPlant.commonInterval?.toString() || '',
+        summerInterval: currentPlant.summerInterval?.toString() || '',
+        winterInterval: currentPlant.winterInterval?.toString() || '',
       });
     }
   }, [currentPlant]);

@@ -32,3 +32,15 @@ export const waterPlant = async (id: number, season: Season) => {
   const response = await api.post(`/plant/${id}/water?season=${season}`);
   return response.data;
 };
+
+// 5. 식물 수정 함수
+export const updatePlant = async (id: number, data: PlantUpdateRequest) => {
+  const response = await api.put(`/plant/${id}`, data);
+  return response.data;
+};
+
+// 6. 식물 삭제 함수
+export const deletePlant = async (id: number) => {
+  const response = await api.delete(`/plant/${id}`);
+  return response.data;
+};

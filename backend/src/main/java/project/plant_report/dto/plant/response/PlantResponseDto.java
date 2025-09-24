@@ -2,7 +2,6 @@ package project.plant_report.dto.plant.response;
 
 import lombok.Getter;
 import project.plant_report.domain.plant.Plant;
-import project.plant_report.domain.plant.Season;
 
 import java.time.LocalDate;
 
@@ -12,7 +11,7 @@ public class PlantResponseDto {
     private String name;
     private LocalDate lastWateringDate; // 마지막 물준 날짜
     private LocalDate nextWateringDate; // 다음 물주기 날짜
-    private boolean isWateringRequired;
+    private Boolean isWateringRequired;
 
     public PlantResponseDto(Plant plant){
 

@@ -27,8 +27,8 @@ export default function HomePage() {
       
       {wateringRequired?.content.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">
-          <h3 className="font-semibold">{plant.name}</h3>
-          <p>다음 물주기: {plant.nextWateringDate}</p>
+          <h3 className="font-semibold text-gray-900">{plant.name}</h3>
+          <p className="text-gray-900">다음 물주기: {plant.nextWateringDate}</p>
           
           <button
             onClick={() => handleWaterPlant(plant.id)}

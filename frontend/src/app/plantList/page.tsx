@@ -1,7 +1,8 @@
 'use client';
 
-import { usePlants, useWaterPlant } from '@/hooks/usePlants';
+import { usePlants, useWaterPlant, useUpdatePlant, useDeletePlant } from '@/hooks/usePlants';
 import { Season } from '@/types/plant';
+import Link from 'next/link';
 
 export default function PlantListPage() {
   // 모든 식물 목록 가져오기
@@ -9,6 +10,10 @@ export default function PlantListPage() {
   
   // 물주기 함수
   const waterPlantMutation = useWaterPlant();
+  
+  // 수정/삭제 함수
+  const updatePlantMutation = useUpdatePlant();
+  const deletePlantMutation = useDeletePlant();
 
   // 로딩 중일 때
   if (isLoading) return <div className="p-4">로딩 중...</div>;
@@ -19,6 +24,18 @@ export default function PlantListPage() {
   // 물주기 버튼 클릭
   const handleWaterPlant = (plantId: number) => {
     waterPlantMutation.mutate({ id: plantId, season: 'COMMON' });
+  };
+
+  // 삭제 버튼 클릭
+  const handleDeletePlant = async (plantId: number, plantName: string) => {
+    if (confirm(`"${plantName}" 식물을 정말 삭제하시겠습니까?`)) {
+      try {
+        await deletePlantMutation.mutateAsync(plantId);
+        alert('식물이 삭제되었습니다.');
+      } catch (error) {
+        alert('삭제에 실패했습니다.');
+      }
+    }
   };
 
   return (
@@ -51,16 +68,36 @@ export default function PlantListPage() {
                 </div>
               </div>
               
-              {/* 물주기 버튼 */}
-              {plant.isWateringRequired && (
-                <button
-                  onClick={() => handleWaterPlant(plant.id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
-                  disabled={waterPlantMutation.isPending}
+              {/* 버튼들 */}
+              <div className="flex gap-2">
+                {/* 물주기 버튼 */}
+                {plant.isWateringRequired && (
+                  <button
+                    onClick={() => handleWaterPlant(plant.id)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+                    disabled={waterPlantMutation.isPending}
+                  >
+                    {waterPlantMutation.isPending ? '물주는 중...' : '물주기'}
+                  </button>
+                )}
+                
+                {/* 수정 버튼 */}
+                <Link 
+                  href={`/edit/${plant.id}`}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 text-center"
                 >
-                  {waterPlantMutation.isPending ? '물주는 중...' : '물주기'}
+                  수정
+                </Link>
+                
+                {/* 삭제 버튼 */}
+                <button
+                  onClick={() => handleDeletePlant(plant.id, plant.name)}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:bg-gray-400"
+                  disabled={deletePlantMutation.isPending}
+                >
+                  {deletePlantMutation.isPending ? '삭제 중...' : '삭제'}
                 </button>
-              )}
+              </div>
             </div>
           </div>
           );

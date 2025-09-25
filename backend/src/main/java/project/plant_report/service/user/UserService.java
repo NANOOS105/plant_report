@@ -40,7 +40,7 @@ public class UserService {
     public void updateUser(UserUpdateRequestDto request){
         User user = userRepository.findById(request.getId())
                 .orElseThrow(()->new UserNotFoundException(request.getId()));
-        user.updateUser(request.getName(),request.getPassword());
+        user.updateUser(request.getName(),request.getPassword(),request.getEmail());
     }
 
     @Transactional

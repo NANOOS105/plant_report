@@ -42,13 +42,15 @@ public class User extends DateEntity {
     }
 
     // == 비즈니스 로직 ==
-    public void updateUser(String name, String password) {
-        if(name != null & !name.isBlank()){
+    public void updateUser(String name, String password, String email) {
+        if(name != null && !name.isBlank()){
             this.name = name;
         }
-        if(password != null & !password.isBlank()){
+        if(password != null && !password.isBlank()){
             this.password = password;
         }
-
+        if(email != null && !email.isBlank()){
+            this.email = email;
+        }
     }
 }

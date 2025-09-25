@@ -63,8 +63,8 @@ class UserServiceTest {
          when(userRepository.save(any(User.class))).thenReturn(savedUser);
          userService.saveUser(saveRequest);
 
-         UserUpdateRequestDto updateRequest = new UserUpdateRequestDto(1L, "AAA", "111");
-         User updatedUser = new User(updateRequest.getName(),updateRequest.getPassword());
+         UserUpdateRequestDto updateRequest = new UserUpdateRequestDto(1L, "AAA", "111", "AAA@naver.com");
+         new User(updateRequest.getName(),updateRequest.getPassword());
          when(userRepository.findById(updateRequest.getId())).thenReturn(Optional.of(savedUser));
 
          //when

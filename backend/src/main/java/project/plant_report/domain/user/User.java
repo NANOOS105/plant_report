@@ -1,14 +1,9 @@
 package project.plant_report.domain.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import project.plant_report.domain.common.DateEntity;
 import project.plant_report.domain.plant.Plant;
-
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

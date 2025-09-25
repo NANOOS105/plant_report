@@ -15,7 +15,7 @@ export const getPlants = async (status?: string, page: number = 0, size: number 
   if (status) params.append('status', status);
   params.append('page', page.toString());
   params.append('size', size.toString());
-  params.append('sort', 'nextWateringDate,asc');
+  params.append('sort', 'lastWateringDate,asc');
   
   const response = await api.get<PageResponse<Plant>>(`/plant?${params}`);
   return response.data;

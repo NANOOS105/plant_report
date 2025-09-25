@@ -10,19 +10,14 @@ public class PlantResponseDto {
     private Long id;
     private String name;
     private LocalDate lastWateringDate; // 마지막 물준 날짜
-    private LocalDate nextWateringDate; // 다음 물주기 날짜
-    private Boolean isWateringRequired;
     private Integer commonInterval; // 공통 물주기 간격
     private Integer summerInterval; // 여름 물주기 간격
     private Integer winterInterval; // 겨울 물주기 간격
 
     public PlantResponseDto(Plant plant){
-
         this.id = plant.getId();
         this.name = plant.getName();
         this.lastWateringDate = plant.getLastWateringDate();
-        this.nextWateringDate = plant.getNextWateringDate();
-        this.isWateringRequired = plant.getIsWateringRequired();
         this.commonInterval = plant.getCommonInterval();
         this.summerInterval = plant.getSummerInterval();
         this.winterInterval = plant.getWinterInterval();

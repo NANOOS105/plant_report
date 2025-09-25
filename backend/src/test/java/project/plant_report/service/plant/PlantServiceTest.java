@@ -46,7 +46,7 @@ class PlantServiceTest {
     public void savePlant() throws Exception{
         //given
         PlantSaveRequestDto request = new PlantSaveRequestDto(
-                "Rose",7,3,null, LocalDate.of(2025,1,1),null
+                "Rose",7,3,null, LocalDate.of(2025,1,1),Season.COMMON,null
         );
         Plant plant = new Plant(
                 request.getName(),
@@ -54,6 +54,7 @@ class PlantServiceTest {
                 request.getSummerInterval(),
                 request.getWinterInterval(),
                 request.getLastWateringDate(),
+                request.getSeason(),
                 request.getUser()
         );
         when(plantRepository.save(any(Plant.class))).thenReturn(plant);
@@ -70,10 +71,10 @@ class PlantServiceTest {
      public void getPlants() throws Exception{
          //given
          Plant plant1 = new Plant(
-                 "Rose",7,3,null, LocalDate.of(2025,1,1),null
+                 "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
          );
          Plant plant2 = new Plant(
-                 "Tree",10,3,null, LocalDate.of(2024,1,1),null
+                 "Tree",10,3,null, LocalDate.of(2024,1,1), Season.COMMON, null
          );
          when(plantRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(plant1,plant2)));
 
@@ -94,7 +95,7 @@ class PlantServiceTest {
           Long plantId = 1L;
           Season season = Season.COMMON;
           Plant plant = new Plant(
-                  "Rose",7,3,null, LocalDate.of(2025,1,1),null
+                  "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
           );
           when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
 
@@ -102,7 +103,6 @@ class PlantServiceTest {
           plantService.waterPlant(plantId,season);
 
           //then
-          assertTrue(plant.getIsWateringRequired());
           verify(plantRepository,times(1)).findById(plantId);
        }
 
@@ -113,7 +113,7 @@ class PlantServiceTest {
         Long plantId = 1L;
         Season season = Season.COMMON;
         Plant plant = new Plant(
-                "Rose",7,3,null, LocalDate.of(2025,1,1),null
+                "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
         );
         plant.waterPlant(season);
         when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
@@ -122,7 +122,6 @@ class PlantServiceTest {
         plantService.cancelWaterPlant(plantId,season);
 
         //then
-        assertFalse(plant.getIsWateringRequired());
         verify(plantRepository,times(1)).findById(plantId);
     }
 

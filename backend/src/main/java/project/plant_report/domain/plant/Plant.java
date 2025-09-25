@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(indexes = {
-    @Index(name = "idx_next_watering_date", columnList = "nextWateringDate")
-})
+@Table
 @Getter
 public class Plant extends DateEntity {
 
@@ -33,18 +31,14 @@ public class Plant extends DateEntity {
     // 물주기 간격 (단순화)
     @Column(nullable = false)
     private Integer commonInterval; // 공통 물주기 간격 (일)
-
     private Integer summerInterval; // 여름 물주기 간격 (일, 선택적)
     private Integer winterInterval; // 겨울 물주기 간격 (일, 선택적)
-
     private LocalDate lastWateringDate; // 마지막 물 준 날짜
-    private LocalDate nextWateringDate; // 다음 물주기 예정 날짜
-    private Boolean isWateringRequired = false; // 물주기 필요 여부
 
     //== 생성자 ==
     protected Plant(){}
 
-    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, User user) {
+    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user) {
         this.name = name;
         this.user = user;
         this.commonInterval = commonInterval;
@@ -54,22 +48,18 @@ public class Plant extends DateEntity {
         // 초기 물주기 상태 설정
         if (lastWateringDate != null) {
             this.lastWateringDate = lastWateringDate;
-            this.nextWateringDate = lastWateringDate.plusDays(commonInterval);
-            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
             
-            // 초기 물주기 기록 생성
-            WateringRecord initialRecord = new WateringRecord(this, lastWateringDate, Season.COMMON);
+            // 초기 물주기 기록 생성 (계절 정보 포함)
+            WateringRecord initialRecord = new WateringRecord(this, lastWateringDate, season);
             this.wateringRecords.add(initialRecord);
         } else {
             this.lastWateringDate = null;
-            this.nextWateringDate = null;
-            this.isWateringRequired = false;
         }
     }
 
     // 테스트 및 편의용 생성자
-    public Plant(String name, int commonInterval, int summerInterval, Integer winterInterval) {
-        this(name, Integer.valueOf(commonInterval), Integer.valueOf(summerInterval), winterInterval, null, null);
+    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval) {
+        this(name, commonInterval, summerInterval, winterInterval, null, Season.COMMON, null);
     }
 
     //== 비즈니스 로직 ==
@@ -80,23 +70,12 @@ public class Plant extends DateEntity {
         this.commonInterval = commonInterval;
         this.summerInterval = summerInterval;
         this.winterInterval = winterInterval;
-        
-        // 다음 물주기 날짜 재계산
-        if (this.lastWateringDate != null) {
-            this.nextWateringDate = this.lastWateringDate.plusDays(commonInterval);
-            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
-        }
     }
 
     // 물주기 실행
     public void waterPlant(Season season) {
         LocalDate today = LocalDate.now();
         this.lastWateringDate = today;
-        
-        // 계절에 따른 간격 선택
-        Integer interval = getIntervalForSeason(season);
-        this.nextWateringDate = today.plusDays(interval);
-        this.isWateringRequired = false;
         
         // 물주기 기록 추가
         WateringRecord record = new WateringRecord(this, today, season);
@@ -105,37 +84,21 @@ public class Plant extends DateEntity {
 
     // 마지막 물주기 취소
     public void cancelLastWaterPlant(Season season) {
-        System.out.println("=== 물주기 취소 시작 ===");
-        System.out.println("현재 물주기 기록 수: " + this.wateringRecords.size());
-        
         if (this.wateringRecords.isEmpty()) {
             throw new IllegalStateException("취소할 물주기 기록이 없습니다.");
         }
         
         // 마지막 기록 제거
-        WateringRecord lastRecord = this.wateringRecords.remove(this.wateringRecords.size() - 1);
-        System.out.println("제거된 기록: " + lastRecord.getLastWateringDate() + " (" + lastRecord.getSeason() + ")");
+        this.wateringRecords.remove(this.wateringRecords.size() - 1);
         
         // 이전 상태로 복원
         if (this.wateringRecords.isEmpty()) {
-            System.out.println("모든 기록 제거됨 - 초기 상태로 복원");
             this.lastWateringDate = null;
-            this.nextWateringDate = null;
-            this.isWateringRequired = false;
         } else {
             // 이전 기록으로 상태 복원
             WateringRecord previousRecord = this.wateringRecords.get(this.wateringRecords.size() - 1);
-            System.out.println("이전 기록으로 복원: " + previousRecord.getLastWateringDate() + " (" + previousRecord.getSeason() + ")");
-            
             this.lastWateringDate = previousRecord.getLastWateringDate();
-            
-            Integer interval = getIntervalForSeason(previousRecord.getSeason());
-            this.nextWateringDate = this.lastWateringDate.plusDays(interval);
-            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
-            
-            System.out.println("복원된 상태 - 마지막 물주기: " + this.lastWateringDate + ", 다음 물주기: " + this.nextWateringDate + ", 물주기 필요: " + this.isWateringRequired);
         }
-        System.out.println("=== 물주기 취소 완료 ===");
     }
 
     // 계절에 따른 물주기 간격 반환
@@ -151,10 +114,4 @@ public class Plant extends DateEntity {
         }
     }
 
-    // 물주기 필요 여부 업데이트
-    public void updateWateringStatus() {
-        if (this.nextWateringDate != null) {
-            this.isWateringRequired = LocalDate.now().isAfter(this.nextWateringDate);
-        }
-    }
 }

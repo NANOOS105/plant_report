@@ -2,6 +2,7 @@
 
 import { usePlants, useWaterPlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
+import { calculateNextWateringDate, isWateringRequired } from '@/utils/plantUtils';
 
 export default function HomePage() {
   // 물줘야 하는 식물 목록 가져오기
@@ -39,8 +40,8 @@ export default function HomePage() {
       {wateringRequired?.content.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">
           <h3 className="font-semibold text-gray-900">{plant.name}</h3>
-          <p className="text-gray-900">다음 물주기: {plant.nextWateringDate}</p>
-          
+          <p className="text-gray-900">마지막 물주기: {plant.lastWateringDate || '없음'}</p>
+          <p className="text-gray-900">다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}</p>
           <button
             onClick={() => handleWaterPlant(plant.id)}
             className="bg-blue-500 text-white p-2 rounded mt-2 text-lg"

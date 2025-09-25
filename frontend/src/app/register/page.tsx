@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSavePlant } from '@/hooks/usePlants';
+import { useSeason } from '@/contexts/SeasonContext';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -15,6 +16,7 @@ export default function RegisterPage() {
 
   const savePlantMutation = useSavePlant();
   const router = useRouter();
+  const { currentSeason } = useSeason();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +29,7 @@ export default function RegisterPage() {
         summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined, // 빈 값은 undefined
         winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined, // 빈 값은 undefined
         lastWateringDate: formData.lastWateringDate || undefined, // 빈 값은 undefined
+        season: currentSeason, // 현재 선택된 계절
         user: null, // 임시로 null (나중에 사용자 인증 추가)
       };
 

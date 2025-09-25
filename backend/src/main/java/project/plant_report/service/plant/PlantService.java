@@ -33,6 +33,7 @@ public class PlantService {
                 request.getSummerInterval(),
                 request.getWinterInterval(),
                 request.getLastWateringDate(),
+                request.getSeason(),
                 request.getUser()
         );
         plantRepository.save(plant);
@@ -41,9 +42,8 @@ public class PlantService {
     //식물 조회 서비스
     @Transactional(readOnly = true)
     public Page<PlantResponseDto> getPlants(String status, Pageable pageable) {
-        Page<Plant> page = "wateringRequired".equals(status)
-                ? plantRepository.findByNextWateringDateLessThanEqual(LocalDate.now(), pageable)
-                : plantRepository.findAll(pageable);
+        // status 파라미터는 프론트엔드에서 처리하므로 모든 식물 반환
+        Page<Plant> page = plantRepository.findAll(pageable);
         return page.map(PlantResponseDto::new);
     }
 

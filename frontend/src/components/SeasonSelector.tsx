@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import { useSeason } from '@/contexts/SeasonContext';
 import { Season } from '@/types/plant';

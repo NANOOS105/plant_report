@@ -2,6 +2,8 @@
 
 import { usePlants, useWaterPlant, useUpdatePlant, useDeletePlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
+import { Plant } from '@/types/plant';
+import { getIntervalForSeason, calculateNextWateringDate, isWateringRequired } from '@/utils/plantUtils';
 import Link from 'next/link';
 
 export default function PlantListPage() {
@@ -10,6 +12,8 @@ export default function PlantListPage() {
   
   // 현재 계절
   const { currentSeason } = useSeason();
+  
+  // 공통 함수들은 utils/plantUtils.ts에서 import
   
   // 물주기 함수
   const waterPlantMutation = useWaterPlant();
@@ -67,15 +71,18 @@ export default function PlantListPage() {
                   마지막 물주기: {plant.lastWateringDate || '없음'}
                 </p>
                 <p className="text-sm text-gray-600">
-                  다음 물주기: {plant.nextWateringDate || '미정'}
+                  다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}
+                </p>
+                <p className="text-xs text-gray-500">
+                  현재 계절 간격: {getIntervalForSeason(plant, currentSeason)}일
                 </p>
                 <div className="mt-2">
                   <span className={`inline-block px-2 py-1 rounded text-xs ${
-                    plant.isWateringRequired 
+                    isWateringRequired(plant, currentSeason)
                       ? 'bg-red-100 text-red-800' 
                       : 'bg-green-100 text-green-800'
                   }`}>
-                    {plant.isWateringRequired ? '물주기 필요' : '물주기 완료'}
+                    {isWateringRequired(plant, currentSeason) ? '물주기 필요' : '물주기 완료'}
                   </span>
                 </div>
               </div>
@@ -83,7 +90,7 @@ export default function PlantListPage() {
               {/* 버튼들 */}
               <div className="flex gap-2">
                 {/* 물주기/취소 토글 버튼 */}
-                {plant.isWateringRequired ? (
+                {isWateringRequired(plant, currentSeason) ? (
                   <button
                     onClick={() => handleWaterPlant(plant.id)}
                     className="bg-blue-200 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-lg"

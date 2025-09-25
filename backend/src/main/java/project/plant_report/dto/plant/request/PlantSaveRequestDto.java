@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import project.plant_report.domain.user.User;
+import project.plant_report.domain.plant.Season;
 
 import java.time.LocalDate;
 
@@ -26,15 +27,18 @@ public class PlantSaveRequestDto {
     
     private LocalDate lastWateringDate; //마지막으로 물 준 날짜 (선택적)
     
+    private Season season = Season.COMMON; // 등록 시점의 계절 (기본값: COMMON)
+    
     // @NotNull(message = "사용자 정보는 필수입니다") // 임시로 주석 처리
     private User user;
 
-    public PlantSaveRequestDto(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, User user) {
+    public PlantSaveRequestDto(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user) {
         this.name = name;
         this.commonInterval = commonInterval;
         this.summerInterval = summerInterval;
         this.winterInterval = winterInterval;
         this.lastWateringDate = lastWateringDate;
+        this.season = season;
         this.user = user;
     }
 }

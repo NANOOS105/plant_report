@@ -37,7 +37,7 @@ export default function HomePage() {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-gray-900">PLANT REPORT HOME</h1>
       
-      {wateringRequired?.content.map((plant) => (
+      {wateringRequired?.content?.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">
           <h3 className="font-semibold text-gray-900">{plant.name}</h3>
           <p className="text-gray-900">마지막 물주기: {plant.lastWateringDate || '없음'}</p>
@@ -51,7 +51,11 @@ export default function HomePage() {
             💧
           </button>
         </div>
-      ))}
+      )) || (
+        <div className="text-center py-8 text-gray-500">
+          등록된 식물이 없습니다.
+        </div>
+      )}
     </div>
   );
 }

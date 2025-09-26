@@ -5,8 +5,8 @@ import { useSeason } from '@/contexts/SeasonContext';
 import { calculateNextWateringDate, isWateringRequired } from '@/utils/plantUtils';
 
 export default function HomePage() {
-  // 물줘야 하는 식물 목록 가져오기
-  const { data: wateringRequired, isLoading, error } = usePlants('wateringRequired');
+  // 모든 식물 목록 가져오기
+  const { data: allPlants, isLoading, error } = usePlants();
   
   // 물주기 함수
   const waterPlantMutation = useWaterPlant();
@@ -16,6 +16,11 @@ export default function HomePage() {
   
   // 현재 계절
   const { currentSeason } = useSeason();
+
+  // 물주기가 필요한 식물만 필터링
+  const wateringRequiredPlants = allPlants?.content?.filter(plant => 
+    isWateringRequired(plant, currentSeason)
+  ) || [];
 
   // 로딩 중일 때
   if (isLoading) return <div>로딩 중...</div>;
@@ -37,7 +42,7 @@ export default function HomePage() {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-gray-900">PLANT REPORT HOME</h1>
       
-      {wateringRequired?.content?.map((plant) => (
+      {wateringRequiredPlants.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">
           <h3 className="font-semibold text-gray-900">{plant.name}</h3>
           <p className="text-gray-900">마지막 물주기: {plant.lastWateringDate || '없음'}</p>
@@ -51,9 +56,12 @@ export default function HomePage() {
             💧
           </button>
         </div>
-      )) || (
+      ))}
+
+      {/* 물주기가 필요한 식물이 없을 때 */}
+      {wateringRequiredPlants.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          등록된 식물이 없습니다.
+          물주기가 필요한 식물이 없습니다! 🎉
         </div>
       )}
     </div>

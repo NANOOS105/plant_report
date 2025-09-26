@@ -4,12 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -21,23 +19,16 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError('');
 
-    // 비밀번호 확인
-    if (formData.password !== formData.confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // TODO: 회원가입 API 호출
-      console.log('회원가입 시도:', formData);
+      // TODO: 로그인 API 호출
+      console.log('로그인 시도:', formData);
       
-      // 임시: 성공 시 로그인 페이지로 이동
-      alert('회원가입 성공! (임시)');
-      router.push('/login');
+      // 임시: 성공 시 홈으로 이동
+      alert('로그인 성공! (임시)');
+      router.push('/');
     } catch (error) {
-      setError('회원가입에 실패했습니다.');
-      console.error('회원가입 오류:', error);
+      setError('로그인에 실패했습니다.');
+      console.error('로그인 오류:', error);
     } finally {
       setIsLoading(false);
     }
@@ -48,31 +39,15 @@ export default function RegisterPage() {
       <div className="max-w-md w-full space-y-8 p-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            회원가입
+            로그인
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            새로운 계정을 만들어보세요
+            식물 물주기 앱에 오신 것을 환영합니다
           </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                이름
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="이름을 입력하세요"
-              />
-            </div>
-
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 이메일
@@ -104,22 +79,6 @@ export default function RegisterPage() {
                 placeholder="비밀번호를 입력하세요"
               />
             </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                비밀번호 확인
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="비밀번호를 다시 입력하세요"
-              />
-            </div>
           </div>
 
           {error && (
@@ -132,17 +91,17 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              {isLoading ? '회원가입 중...' : '회원가입'}
+              {isLoading ? '로그인 중...' : '로그인'}
             </button>
           </div>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              이미 계정이 있으신가요?{' '}
-              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                로그인
+              계정이 없으신가요?{' '}
+              <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+                회원가입
               </Link>
             </p>
           </div>

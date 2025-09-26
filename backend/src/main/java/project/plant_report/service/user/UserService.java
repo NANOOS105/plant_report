@@ -1,5 +1,6 @@
 package project.plant_report.service.user;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.plant_report.domain.user.User;
@@ -12,9 +13,11 @@ import project.plant_report.exception.UserNotFoundException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //유저 등록 서비스
@@ -31,7 +34,7 @@ public class UserService {
         User user = new User(
                 request.getName(),
                 request.getEmail(),
-                request.getPassword()
+                passwordEncoder.encode(request.getPassword())  // 비밀번호 암호화
         );
         userRepository.save(user);
     }
@@ -40,7 +43,11 @@ public class UserService {
     public void updateUser(UserUpdateRequestDto request){
         User user = userRepository.findById(request.getId())
                 .orElseThrow(()->new UserNotFoundException(request.getId()));
-        user.updateUser(request.getName(),request.getPassword(),request.getEmail());
+        
+        // 비밀번호가 제공된 경우에만 암호화
+        String encodedPassword = request.getPassword() != null ? 
+            passwordEncoder.encode(request.getPassword()) : null;
+        user.updateUser(request.getName(), encodedPassword, request.getEmail());
     }
 
     @Transactional

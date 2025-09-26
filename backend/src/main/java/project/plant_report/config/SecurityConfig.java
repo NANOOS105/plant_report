@@ -30,6 +30,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/**").permitAll()  // 인증 관련 API는 누구나 접근 가능
                 .requestMatchers("/api/user").permitAll()     // 회원가입은 누구나 가능
+                .requestMatchers("/api/plant/**").permitAll() // 임시: 식물 API 인증 해제
                 .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 접근 허용
                 .anyRequest().authenticated()  // 나머지는 인증 필요

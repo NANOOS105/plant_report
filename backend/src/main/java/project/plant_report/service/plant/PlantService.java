@@ -60,6 +60,11 @@ public class PlantService {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException(id));
         plant.updatePlant(request.getName(), request.getCommonInterval(), request.getSummerInterval(), request.getWinterInterval(), request.getNotes());
+        
+        // 마지막 물주기 날짜 업데이트
+        if (request.getLastWateringDate() != null) {
+            plant.setLastWateringDate(request.getLastWateringDate());
+        }
     }
 
     //식물 삭제 서비스

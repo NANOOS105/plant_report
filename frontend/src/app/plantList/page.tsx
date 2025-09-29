@@ -59,24 +59,39 @@ export default function PlantListPage() {
       <h1 className="text-2xl font-bold mb-4 text-gray-900">식물 목록</h1>
       
       {/* 식물 목록 */}
-      <div className="space-y-4">
+      <div className="space-y-1">
         {plants?.content.map((plant) => {
           console.log('개별 식물 데이터:', plant);
           return (
             <div key={plant.id} className="border p-4 rounded-lg bg-white shadow-sm">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">{plant.name}</h3>
-                <p className="text-sm text-gray-600">
-                  마지막 물주기: {plant.lastWateringDate || '없음'}
-                </p>
-                <p className="text-sm text-gray-600">
-                  다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}
-                </p>
-                <p className="text-xs text-gray-500">
-                  현재 계절 간격: {getIntervalForSeason(plant, currentSeason)}일
-                </p>
-                <div className="mt-2">
+            <div className="flex items-start">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{plant.name}</h3>
+                
+                {/* 수평 배치: 물주기 정보와 메모 */}
+                <div className="flex gap-4 items-start">
+                  <div className="flex-none h-16 flex flex-col justify-center">
+                    <p className="text-sm text-gray-600">
+                      마지막 물주기: {plant.lastWateringDate || '없음'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      현재 계절 간격: {getIntervalForSeason(plant, currentSeason)}일
+                    </p>
+                  </div>
+                  
+                  {plant.notes && (
+                    <div className="w-150 ml-4">
+                      <div className="p-1 bg-gray-50 rounded text-sm text-gray-700 h-16">
+                        <span className="font-medium">메모:</span> {plant.notes}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="mt-1">
                   <span className={`inline-block px-2 py-1 rounded text-xs ${
                     isWateringRequired(plant, currentSeason)
                       ? 'bg-red-100 text-red-800' 
@@ -88,7 +103,7 @@ export default function PlantListPage() {
               </div>
               
               {/* 버튼들 */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 ml-4">
                 {/* 물주기/취소 토글 버튼 */}
                 {isWateringRequired(plant, currentSeason) ? (
                   <button

@@ -48,7 +48,7 @@ export default function HomePage() {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold text-gray-900">현재 물을 주어야 하는 식물 목록록</h1>
+        <h1 className="text-xl font-bold text-gray-900">현재 물을 주어야 하는 식물 목록</h1>
       </div>
       
       {wateringRequiredPlants.map((plant) => (

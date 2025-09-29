@@ -104,6 +104,11 @@ public class Plant extends DateEntity {
         }
     }
 
+    // 마지막 물주기 날짜 설정
+    public void setLastWateringDate(LocalDate lastWateringDate) {
+        this.lastWateringDate = lastWateringDate;
+    }
+
     // 계절에 따른 물주기 간격 반환
     public Integer getIntervalForSeason(Season season) {
         switch (season) {

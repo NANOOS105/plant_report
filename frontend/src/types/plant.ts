@@ -6,6 +6,7 @@ export interface Plant {
   commonInterval?: number;
   summerInterval?: number;
   winterInterval?: number;
+  notes?: string;
 }
 
 // 백엔드 PlantSaveRequestDto와 일치하는 타입
@@ -17,6 +18,7 @@ export interface PlantSaveRequest {
   lastWateringDate?: string;
   season: Season; // 등록 시점의 계절
   user: any; // 임시로 any 사용 (나중에 User 타입 정의)
+  notes?: string;
 }
 
 // 백엔드 PlantUpdateRequestDto와 일치하는 타입
@@ -25,6 +27,7 @@ export interface PlantUpdateRequest {
   commonInterval?: number;
   summerInterval?: number;
   winterInterval?: number;
+  notes?: string;
 }
 
 // 계절 타입 (백엔드 Season enum과 일치)

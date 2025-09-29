@@ -59,7 +59,7 @@ export default function RegisterPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                이름
+                닉네임
               </label>
               <input
                 id="name"
@@ -68,8 +68,8 @@ export default function RegisterPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="이름을 입력하세요"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                placeholder="닉네임임을 입력하세요"
               />
             </div>
 
@@ -84,7 +84,7 @@ export default function RegisterPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
                 placeholder="이메일을 입력하세요"
               />
             </div>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
                 placeholder="비밀번호를 입력하세요"
               />
             </div>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 required
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
                 placeholder="비밀번호를 다시 입력하세요"
               />
             </div>

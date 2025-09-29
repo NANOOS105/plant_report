@@ -21,6 +21,8 @@ export default function EditPlantPage() {
     commonInterval: '',
     summerInterval: '',
     winterInterval: '',
+    lastWateringDate: '',
+    notes: '',
   });
 
   // 현재 식물 찾기
@@ -34,6 +36,8 @@ export default function EditPlantPage() {
         commonInterval: currentPlant.commonInterval?.toString() || '',
         summerInterval: currentPlant.summerInterval?.toString() || '',
         winterInterval: currentPlant.winterInterval?.toString() || '',
+        lastWateringDate: currentPlant.lastWateringDate || '',
+        notes: currentPlant.notes || '',
       });
     }
   }, [currentPlant]);
@@ -48,6 +52,8 @@ export default function EditPlantPage() {
         commonInterval: formData.commonInterval ? parseInt(formData.commonInterval) : undefined,
         summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined,
         winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined,
+        lastWateringDate: formData.lastWateringDate || undefined,
+        notes: formData.notes || undefined,
       };
 
       await updatePlantMutation.mutateAsync({ id: plantId, data: updateData });
@@ -78,73 +84,139 @@ export default function EditPlantPage() {
   }
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900">식물 정보 수정</h1>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1 text-gray-900">식물 이름</label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
-            className="w-full p-2 border rounded placeholder-gray-600 text-gray-900"
-            placeholder="예: 몬스테라"
-            required
-          />
+    <div className="max-w-2xl mx-auto p-6 pb-32">
+      <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            🌱 식물 정보 수정
+          </h1>
         </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 식물 이름 */}
+            <div className="md:col-span-2">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                식물 이름 *
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+                placeholder="예: 몬스테라, 고무나무"
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-gray-900">공통 물주기 간격 (일)</label>
-          <input
-            type="number"
-            value={formData.commonInterval}
-            onChange={(e) => setFormData({...formData, commonInterval: e.target.value})}
-            className="w-full p-2 border rounded placeholder-gray-600 text-gray-900"
-            placeholder="예: 7"
-          />
-        </div>
+            {/* 공통 물주기 주기 */}
+            <div>
+              <label htmlFor="commonInterval" className="block text-sm font-medium text-gray-700 mb-2">
+                공통 물주기 주기 (일) *
+              </label>
+              <input
+                id="commonInterval"
+                name="commonInterval"
+                type="number"
+                min="1"
+                max="30"
+                required
+                value={formData.commonInterval}
+                onChange={(e) => setFormData({...formData, commonInterval: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+                placeholder="예: 7"
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-gray-900">여름 물주기 간격 (일)</label>
-          <input
-            type="number"
-            value={formData.summerInterval}
-            onChange={(e) => setFormData({...formData, summerInterval: e.target.value})}
-            className="w-full p-2 border rounded placeholder-gray-600 text-gray-900"
-            placeholder="예: 5 (선택사항)"
-          />
-        </div>
+            {/* 여름 물주기 주기 */}
+            <div>
+              <label htmlFor="summerInterval" className="block text-sm font-medium text-gray-700 mb-2">
+                여름 물주기 주기 (일)
+              </label>
+              <input
+                id="summerInterval"
+                name="summerInterval"
+                type="number"
+                min="1"
+                max="30"
+                value={formData.summerInterval}
+                onChange={(e) => setFormData({...formData, summerInterval: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+                placeholder="선택(비워두면 공통 주기 사용)"
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-gray-900">겨울 물주기 간격 (일)</label>
-          <input
-            type="number"
-            value={formData.winterInterval}
-            onChange={(e) => setFormData({...formData, winterInterval: e.target.value})}
-            className="w-full p-2 border rounded placeholder-gray-600 text-gray-900"
-            placeholder="예: 10 (선택사항)"
-          />
-        </div>
+            {/* 겨울 물주기 주기 */}
+            <div>
+              <label htmlFor="winterInterval" className="block text-sm font-medium text-gray-700 mb-2">
+                겨울 물주기 주기 (일)
+              </label>
+              <input
+                id="winterInterval"
+                name="winterInterval"
+                type="number"
+                min="1"
+                max="30"
+                value={formData.winterInterval}
+                onChange={(e) => setFormData({...formData, winterInterval: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+                placeholder="선택(비워두면 공통 주기 사용)"
+              />
+            </div>
 
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={updatePlantMutation.isPending}
-            className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {updatePlantMutation.isPending ? '수정 중...' : '수정하기'}
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => router.push('/plantList')}
-            className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
-          >
-            취소
-          </button>
-        </div>
-      </form>
+            {/* 마지막 물주기 날짜 */}
+            <div>
+              <label htmlFor="lastWateringDate" className="block text-sm font-medium text-gray-700 mb-2">
+                마지막 물주기 날짜
+              </label>
+              <input
+                id="lastWateringDate"
+                name="lastWateringDate"
+                type="date"
+                value={formData.lastWateringDate}
+                onChange={(e) => setFormData({...formData, lastWateringDate: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+              />
+            </div>
+          </div>
+
+          {/* 메모 */}
+          <div>
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+              메모
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={4}
+              value={formData.notes}
+              onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+              placeholder="식물에 대한 특별한 관리법이나 주의사항을 적어주세요"
+            />
+          </div>
+
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              disabled={updatePlantMutation.isPending}
+              className="flex-1 bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+            >
+              {updatePlantMutation.isPending ? '수정 중...' : '🌱 수정하기'}
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => router.push('/plantList')}
+              className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 text-center font-medium"
+            >
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

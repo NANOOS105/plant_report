@@ -3,6 +3,8 @@ package project.plant_report.dto.plant.request;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 public class PlantUpdateRequestDto {
 
@@ -17,6 +19,8 @@ public class PlantUpdateRequestDto {
 
     @Positive(message = "겨울 물주기 간격은 양수여야 합니다")
     private Integer winterInterval; // 겨울 물주기 (선택)
+    
+    private LocalDate lastWateringDate; // 마지막 물주기 날짜 (선택)
     
     private String notes; // 메모 (선택)
 }

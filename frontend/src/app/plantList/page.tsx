@@ -248,19 +248,19 @@ export default function PlantListPage() {
                   <div className="flex gap-6 items-center mt-3 pt-3 border-t border-gray-100">
                     <div className="space-y-1">
                       <p className="text-sm text-gray-600">
-                        마지막: {plant.lastWateringDate || '없음'}
+                        마지막 물주기: {plant.lastWateringDate || '없음'}
                       </p>
                       <p className="text-sm text-gray-600">
-                        다음: {calculateNextWateringDate(plant, currentSeason) || '미정'}
+                        다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}
                       </p>
                       <p className="text-xs text-gray-500">
-                        간격: {getIntervalForSeason(plant, currentSeason)}일
+                        물주기 간격: {getIntervalForSeason(plant, currentSeason)}일
                       </p>
                     </div>
                     
                     {plant.notes && (
                       <div className="flex-1 ml-4">
-                        <div className="p-1 bg-gray-50 rounded text-sm text-gray-700 h-16">
+                        <div className="rounded text-sm text-gray-700 h-16">
                           <span className="font-medium">메모:</span> {plant.notes}
                         </div >
                       </div>

@@ -39,7 +39,7 @@ export default function PlantRegisterPage() {
       
       await savePlantMutation.mutateAsync(requestData);
       alert('식물 등록 성공!');
-      router.push('/');
+      router.push('/plantList');
     } catch (error) {
       setError('식물 등록에 실패했습니다.');
       console.error('식물 등록 오류:', error);

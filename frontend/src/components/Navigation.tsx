@@ -36,7 +36,14 @@ export default function Navigation() {
               <span className="text-2xl">🌱</span>
               <span className="text-xl font-bold text-gray-800">Plant Report</span>
             </Link>
+
+            {/* 오늘 날짜 */}
+            <div className="text-gray-700 text-sm font-medium px-3 py-2 ml-5">
+              {getTodayString()}
+            </div>
+
           </div>
+          
 
           {/* 메뉴 아이템들 */}
           <div className="flex items-center space-x-4">
@@ -50,11 +57,6 @@ export default function Navigation() {
 
             {/* 계절 선택기 */}
             <SeasonSelector />
-
-            {/* 오늘 날짜 */}
-            <div className="text-gray-600 text-sm font-medium px-3 py-2">
-              {getTodayString()}
-            </div>
 
             {/* 식물 목록 링크 */}
             <Link 

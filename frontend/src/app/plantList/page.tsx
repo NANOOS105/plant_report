@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import { usePlants, useWaterPlant, useUpdatePlant, useDeletePlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
 import { Plant } from '@/types/plant';
@@ -13,6 +14,9 @@ export default function PlantListPage() {
   // 현재 계절
   const { currentSeason } = useSeason();
   
+  // 검색 상태
+  const [searchTerm, setSearchTerm] = useState('');
+  
   // 공통 함수들은 utils/plantUtils.ts에서 import
   
   // 물주기 함수
@@ -24,6 +28,19 @@ export default function PlantListPage() {
   
   // 물주기 취소 함수
   const cancelWaterPlantMutation = useCancelWaterPlant();
+
+  // 검색된 식물 목록 필터링
+  const filteredPlants = useMemo(() => {
+    if (!plants?.content) return [];
+    
+    if (!searchTerm.trim()) {
+      return plants.content;
+    }
+    
+    return plants.content.filter(plant => 
+      plant.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [plants?.content, searchTerm]);
 
   // 로딩 중일 때
   if (isLoading) return <div className="p-4">로딩 중...</div>;
@@ -56,11 +73,49 @@ export default function PlantListPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900">식물 목록</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">식물 목록</h1>
+        
+        {/* 검색 입력창 */}
+        <div className="flex items-center space-x-2">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="식물 이름으로 검색..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-64 px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
+            />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="text-gray-400 hover:text-gray-600"
+              title="검색 초기화"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+      
+      {/* 검색 결과 개수 표시 */}
+      {searchTerm && (
+        <div className="mb-4 text-sm text-gray-600">
+          "{searchTerm}" 검색 결과: {filteredPlants.length}개
+        </div>
+      )}
       
       {/* 식물 목록 */}
       <div className="space-y-1">
-        {plants?.content.map((plant) => {
+        {filteredPlants.map((plant) => {
           console.log('개별 식물 데이터:', plant);
           return (
             <div key={plant.id} className="border p-4 rounded-lg bg-white shadow-sm">
@@ -153,9 +208,9 @@ export default function PlantListPage() {
       </div>
 
       {/* 빈 목록 메시지 */}
-      {plants?.content.length === 0 && (
+      {filteredPlants.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          등록된 식물이 없습니다.
+          {searchTerm ? `"${searchTerm}"에 해당하는 식물이 없습니다.` : '등록된 식물이 없습니다.'}
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { usePlants, useWaterPlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
 import { calculateNextWateringDate, isWateringRequired } from '@/utils/plantUtils';
+import Link from 'next/link';
 
 export default function HomePage() {
   // 모든 식물 목록 가져오기
@@ -17,10 +18,16 @@ export default function HomePage() {
   // 현재 계절
   const { currentSeason } = useSeason();
 
+  // 디버깅용 로그
+  console.log('전체 식물 데이터:', allPlants);
+  console.log('현재 계절:', currentSeason);
+  
   // 물주기가 필요한 식물만 필터링
   const wateringRequiredPlants = allPlants?.content?.filter(plant => 
     isWateringRequired(plant, currentSeason)
   ) || [];
+  
+  console.log('물주기 필요한 식물:', wateringRequiredPlants);
 
   // 로딩 중일 때
   if (isLoading) return <div>로딩 중...</div>;
@@ -40,7 +47,9 @@ export default function HomePage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900">PLANT REPORT HOME</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-bold text-gray-900">현재 물을 주어야 하는 식물 목록록</h1>
+      </div>
       
       {wateringRequiredPlants.map((plant) => (
         <div key={plant.id} className="border p-4 mb-2 rounded">

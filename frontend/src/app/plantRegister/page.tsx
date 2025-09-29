@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Season } from '@/types/plant';
+import { useSavePlant } from '@/hooks/usePlants';
 
 export default function PlantRegisterPage() {
   const [formData, setFormData] = useState({
@@ -14,35 +15,35 @@ export default function PlantRegisterPage() {
     lastWateringDate: '',
     notes: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  
   const router = useRouter();
+  
+  // 식물 등록 mutation
+  const savePlantMutation = useSavePlant();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
     try {
-      // TODO: 식물 등록 API 호출
       const requestData = {
         ...formData,
         commonInterval: parseInt(formData.commonInterval),
-        summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : null,
-        winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : null,
-        lastWateringDate: formData.lastWateringDate || null,
+        summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined,
+        winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined,
+        lastWateringDate: formData.lastWateringDate || undefined,
+        season: 'COMMON' as Season,
+        user: null, // 임시로 null
       };
+      
       console.log('식물 등록 시도:', requestData);
       
-      // 임시: 성공 시 홈페이지로 이동
-      alert('식물 등록 성공! (임시)');
+      await savePlantMutation.mutateAsync(requestData);
+      alert('식물 등록 성공!');
       router.push('/');
     } catch (error) {
       setError('식물 등록에 실패했습니다.');
       console.error('식물 등록 오류:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -165,10 +166,10 @@ export default function PlantRegisterPage() {
           <div className="flex space-x-4">
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={savePlantMutation.isPending}
               className="flex-1 bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
             >
-              {isLoading ? '등록 중...' : '🌱 식물 등록하기'}
+              {savePlantMutation.isPending ? '등록 중...' : '🌱 식물 등록하기'}
             </button>
             
             <Link

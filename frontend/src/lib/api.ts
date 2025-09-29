@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // CORS 쿠키 포함
 });
 
 // 2. 식물 목록 조회 함수

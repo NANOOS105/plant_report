@@ -20,6 +20,9 @@ export default function PlantListPage() {
   // 정렬 상태
   const [sortBy, setSortBy] = useState<'name' | 'nextWatering' | 'lastWatering' | 'delay'>('name');
   
+  // 각 식물의 펼침/접힘 상태 관리
+  const [expandedPlants, setExpandedPlants] = useState<Set<number>>(new Set());
+  
   // 공통 함수들은 utils/plantUtils.ts에서 import
   
   // 물주기 함수
@@ -100,9 +103,22 @@ export default function PlantListPage() {
     cancelWaterPlantMutation.mutate({ id: plantId, season: currentSeason });
   };
 
+  // 식물 펼치기/접기 토글 함수
+  const togglePlantExpansion = (plantId: number) => {
+    setExpandedPlants(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(plantId)) {
+        newSet.delete(plantId); // 이미 펼쳐져 있으면 접기
+      } else {
+        newSet.add(plantId); // 접혀져 있으면 펼치기
+      }
+      return newSet;
+    });
+  };
+
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-gray-900">식물 목록</h1>
         
         {/* 검색 및 정렬 컨트롤 */}
@@ -160,11 +176,17 @@ export default function PlantListPage() {
         {filteredAndSortedPlants.map((plant) => {
           console.log('개별 식물 데이터:', plant);
           return (
-            <div key={plant.id} className="border p-3 rounded-lg bg-white shadow-sm">
+            <div 
+              key={plant.id} 
+              className="border p-3 rounded-lg bg-white shadow-sm cursor-pointer hover:bg-gray-50 transition-colors"
+              onClick={() => togglePlantExpansion(plant.id)}
+            >
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-semibold text-gray-900">{plant.name}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-gray-900">
+                    {plant.name}
+                  </h3>
                   <div className="flex items-center gap-2">
                     <span className={`px-2 py-1 rounded text-xs font-medium h-8 flex items-center ${
                       isWateringRequired(plant, currentSeason)
@@ -177,7 +199,7 @@ export default function PlantListPage() {
                     </span>
                     
                     {/* 버튼들 */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                       {/* 물주기/취소 토글 버튼 */}
                       {isWateringRequired(plant, currentSeason) ? (
                         <button
@@ -221,27 +243,30 @@ export default function PlantListPage() {
                   </div>
                 </div>
                 
-                <div className="flex gap-6 items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm text-gray-600">
-                      마지막: {plant.lastWateringDate || '없음'}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      다음: {calculateNextWateringDate(plant, currentSeason) || '미정'}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      간격: {getIntervalForSeason(plant, currentSeason)}일
-                    </p>
-                  </div>
-                  
-                  {plant.notes && (
-                    <div className="w-150 ml-4">
-                      <div className="p-1 bg-gray-50 rounded text-sm text-gray-700 h-16">
-                        <span className="font-medium">메모:</span> {plant.notes}
-                      </div >
+                {/* 상세 정보 - 펼쳐진 식물에만 표시 */}
+                {expandedPlants.has(plant.id) && (
+                  <div className="flex gap-6 items-center mt-3 pt-3 border-t border-gray-100">
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-600">
+                        마지막: {plant.lastWateringDate || '없음'}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        다음: {calculateNextWateringDate(plant, currentSeason) || '미정'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        간격: {getIntervalForSeason(plant, currentSeason)}일
+                      </p>
                     </div>
-                  )}
-                </div>
+                    
+                    {plant.notes && (
+                      <div className="flex-1 ml-4">
+                        <div className="p-1 bg-gray-50 rounded text-sm text-gray-700 h-16">
+                          <span className="font-medium">메모:</span> {plant.notes}
+                        </div >
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
 import { usePlants, useWaterPlant, useUpdatePlant, useDeletePlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
 import { Plant } from '@/types/plant';
-import { getIntervalForSeason, calculateNextWateringDate, isWateringRequired } from '@/utils/plantUtils';
+import { getIntervalForSeason, calculateNextWateringDate, isWateringRequired, getWateringDelayDays } from '@/utils/plantUtils';
 import Link from 'next/link';
 
 export default function PlantListPage() {
@@ -97,7 +97,9 @@ export default function PlantListPage() {
                       ? 'bg-red-100 text-red-800' 
                       : 'bg-green-100 text-green-800'
                   }`}>
-                    {isWateringRequired(plant, currentSeason) ? '물주기 필요' : '물주기 완료'}
+                    {isWateringRequired(plant, currentSeason) 
+                      ? `물주기 필요${getWateringDelayDays(plant, currentSeason) > 0 ? ` (${getWateringDelayDays(plant, currentSeason)}일 지연)` : ''}` 
+                      : '물주기 완료'}
                   </span>
                 </div>
               </div>

@@ -5,6 +5,18 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import SeasonSelector from '@/components/SeasonSelector';
 
+// 오늘 날짜를 포맷팅하는 함수
+const getTodayString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekday = weekdays[today.getDay()];
+  
+  return `${year}.${month}.${day} (${weekday})`;
+};
+
 export default function Navigation() {
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -38,6 +50,11 @@ export default function Navigation() {
 
             {/* 계절 선택기 */}
             <SeasonSelector />
+
+            {/* 오늘 날짜 */}
+            <div className="text-gray-600 text-sm font-medium px-3 py-2">
+              {getTodayString()}
+            </div>
 
             {/* 식물 목록 링크 */}
             <Link 

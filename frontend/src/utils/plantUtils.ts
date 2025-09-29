@@ -32,3 +32,16 @@ export const isWateringRequired = (plant: Plant, currentSeason: Season) => {
   const today = new Date().toISOString().split('T')[0];
   return nextWateringDate <= today;
 };
+
+// 물주기 지연 일수 계산
+export const getWateringDelayDays = (plant: Plant, currentSeason: Season) => {
+  const nextWateringDate = calculateNextWateringDate(plant, currentSeason);
+  if (!nextWateringDate) return 0;
+  
+  const today = new Date();
+  const nextWatering = new Date(nextWateringDate);
+  const diffTime = today.getTime() - nextWatering.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return Math.max(0, diffDays);
+};

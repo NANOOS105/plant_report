@@ -17,7 +17,6 @@ export interface PlantSaveRequest {
   winterInterval?: number;
   lastWateringDate?: string;
   season: Season; // 등록 시점의 계절
-  user: any; // 임시로 any 사용 (나중에 User 타입 정의)
   notes?: string;
 }
 

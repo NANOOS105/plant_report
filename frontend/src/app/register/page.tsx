@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   
   const router = useRouter();
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,14 +31,11 @@ export default function RegisterPage() {
     }
 
     try {
-      // TODO: 회원가입 API 호출
-      console.log('회원가입 시도:', formData);
-      
-      // 임시: 성공 시 로그인 페이지로 이동
-      alert('회원가입 성공! (임시)');
+      await register(formData.name, formData.email, formData.password);
+      alert('회원가입 성공! 로그인해주세요.');
       router.push('/login');
     } catch (error) {
-      setError('회원가입에 실패했습니다.');
+      setError(error instanceof Error ? error.message : '회원가입에 실패했습니다.');
       console.error('회원가입 오류:', error);
     } finally {
       setIsLoading(false);

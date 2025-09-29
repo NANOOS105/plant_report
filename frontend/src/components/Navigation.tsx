@@ -1,19 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import SeasonSelector from '@/components/SeasonSelector';
 
 export default function Navigation() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 임시: 로그인 상태
-  const [userName, setUserName] = useState(''); // 임시: 사용자 이름
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {
-    // TODO: 로그아웃 API 호출
-    setIsLoggedIn(false);
-    setUserName('');
+    logout();
     router.push('/');
   };
 
@@ -59,10 +56,10 @@ export default function Navigation() {
             </Link>
 
             {/* 로그인 상태에 따른 버튼 */}
-            {isLoggedIn ? (
+            {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-gray-600 text-sm">
-                  안녕하세요, {userName}님!
+                  안녕하세요, {user.name}님!
                 </span>
                 <button
                   onClick={handleLogout}

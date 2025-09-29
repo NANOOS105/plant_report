@@ -3,8 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers/query-client";
 import { SeasonProvider } from "@/contexts/SeasonContext";
-import SeasonSelector from "@/components/SeasonSelector";
-import Link from "next/link";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
 
 const notoSans = Noto_Sans_KR({
@@ -27,17 +26,19 @@ export default function RootLayout({
     <html lang="ko">
               <body className={`${notoSans.variable} antialiased bg-gray-50 text-gray-900`}>
                 <Providers>
-                  <SeasonProvider>
-                    <div className="min-h-screen bg-gray-50">
-                      {/* 상단 네비게이션 */}
-                      <Navigation />
-                      
-                      {/* 메인 내용 */}
-                      <main className="p-6">
-                        {children}
-                      </main>
-                    </div>
-                  </SeasonProvider>
+                  <AuthProvider>
+                    <SeasonProvider>
+                      <div className="min-h-screen bg-gray-50">
+                        {/* 상단 네비게이션 */}
+                        <Navigation />
+                        
+                        {/* 메인 내용 */}
+                        <main className="p-6">
+                          {children}
+                        </main>
+                      </div>
+                    </SeasonProvider>
+                  </AuthProvider>
                 </Providers>
               </body>
     </html>

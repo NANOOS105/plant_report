@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.domain.Sort;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import project.plant_report.domain.plant.Season;
 import project.plant_report.dto.plant.request.PlantSaveRequestDto;
@@ -27,16 +28,22 @@ public class PlantController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> savePlant(@Valid @RequestBody PlantSaveRequestDto request){
-        plantService.savePlant(request);
+    public ResponseEntity<Void> savePlant(@Valid @RequestBody PlantSaveRequestDto request, Authentication authentication){
+        // JWT에서 사용자 ID 추출
+        Long userId = (Long) authentication.getDetails();
+        plantService.savePlant(request, userId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public Page<PlantResponseDto> getPlants(
             @RequestParam(required = false) String status,
-            @ParameterObject @PageableDefault(size = 20, sort = "nextWateringDate", direction = Sort.Direction.ASC) Pageable pageable){
-        return plantService.getPlants(status, pageable);
+            @ParameterObject @PageableDefault(size = 20, sort = "lastWateringDate", direction = Sort.Direction.ASC) Pageable pageable,
+            Authentication authentication){
+        
+        // JWT에서 사용자 ID 추출
+        Long userId = (Long) authentication.getDetails();
+        return plantService.getPlantsByUserId(userId, status, pageable);
     }
 
     @PutMapping("/{id}")

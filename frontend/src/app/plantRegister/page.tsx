@@ -26,15 +26,14 @@ export default function PlantRegisterPage() {
     setError('');
 
     try {
-      const requestData = {
-        ...formData,
-        commonInterval: parseInt(formData.commonInterval),
-        summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined,
-        winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined,
-        lastWateringDate: formData.lastWateringDate || undefined,
-        season: 'COMMON' as Season,
-        user: null, // 임시로 null
-      };
+             const requestData = {
+               ...formData,
+               commonInterval: parseInt(formData.commonInterval),
+               summerInterval: formData.summerInterval ? parseInt(formData.summerInterval) : undefined,
+               winterInterval: formData.winterInterval ? parseInt(formData.winterInterval) : undefined,
+               lastWateringDate: formData.lastWateringDate || undefined,
+               season: 'COMMON' as Season,
+             };
       
       console.log('식물 등록 시도:', requestData);
       

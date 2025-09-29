@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.plant_report.domain.plant.Plant;
 import project.plant_report.domain.plant.PlantRepository;
 import project.plant_report.domain.plant.Season;
+import project.plant_report.domain.user.User;
+import project.plant_report.domain.user.UserRepository;
 import project.plant_report.dto.plant.request.PlantSaveRequestDto;
 import project.plant_report.dto.plant.request.PlantUpdateRequestDto;
 import project.plant_report.dto.plant.response.PlantResponseDto;
@@ -19,9 +21,11 @@ import java.util.List;
 public class PlantService {
 
     private final PlantRepository plantRepository;
+    private final UserRepository userRepository;
 
-    public PlantService(PlantRepository plantRepository) {
+    public PlantService(PlantRepository plantRepository, UserRepository userRepository) {
         this.plantRepository = plantRepository;
+        this.userRepository = userRepository;
     }
 
     //식물 등록 서비스
@@ -40,11 +44,39 @@ public class PlantService {
         plantRepository.save(plant);
     }
 
+    //사용자별 식물 등록 서비스
+    @Transactional
+    public void savePlant(PlantSaveRequestDto request, Long userId) {
+        // User 엔티티 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+        
+        Plant plant = new Plant(
+                request.getName(),
+                request.getCommonInterval(),
+                request.getSummerInterval(),
+                request.getWinterInterval(),
+                request.getLastWateringDate(),
+                request.getSeason(),
+                user,
+                request.getNotes()
+        );
+        plantRepository.save(plant);
+    }
+
     //식물 조회 서비스
     @Transactional(readOnly = true)
     public Page<PlantResponseDto> getPlants(String status, Pageable pageable) {
         // status 파라미터는 프론트엔드에서 처리하므로 모든 식물 반환
         Page<Plant> page = plantRepository.findAll(pageable);
+        return page.map(PlantResponseDto::new);
+    }
+
+    //사용자별 식물 조회 서비스
+    @Transactional(readOnly = true)
+    public Page<PlantResponseDto> getPlantsByUserId(Long userId, String status, Pageable pageable) {
+        // 특정 사용자의 식물만 조회
+        Page<Plant> page = plantRepository.findByUserId(userId, pageable);
         return page.map(PlantResponseDto::new);
     }
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,14 +22,11 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // TODO: 로그인 API 호출
-      console.log('로그인 시도:', formData);
-      
-      // 임시: 성공 시 홈으로 이동
-      alert('로그인 성공! (임시)');
+      await login(formData.email, formData.password);
+      alert('로그인 성공!');
       router.push('/');
     } catch (error) {
-      setError('로그인에 실패했습니다.');
+      setError(error instanceof Error ? error.message : '로그인에 실패했습니다.');
       console.error('로그인 오류:', error);
     } finally {
       setIsLoading(false);
@@ -59,7 +58,7 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="이메일을 입력하세요"
               />
             </div>
@@ -75,7 +74,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="비밀번호를 입력하세요"
               />
             </div>

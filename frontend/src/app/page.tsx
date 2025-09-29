@@ -56,50 +56,46 @@ export default function HomePage() {
         <h1 className="text-xl font-bold text-gray-900">현재 물을 주어야 하는 식물 목록</h1>
       </div>
       
-             <div className="space-y-1">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                {wateringRequiredPlants.map((plant) => {
                  const delayDays = getWateringDelayDays(plant, currentSeason);
                  return (
-                   <div key={plant.id} className="border p-4 rounded-lg bg-white shadow-sm">
-                     <div className="flex items-start">
+                   <div key={plant.id} className="border p-3 rounded-lg bg-white shadow-sm">
+                     <div className="flex items-start justify-between">
                        <div className="flex-1">
-                         <h3 className="text-lg font-semibold text-gray-900 mb-2">{plant.name}</h3>
-                         
-                         {/* 수평 배치: 물주기 정보와 메모 */}
-                         <div className="flex gap-4 items-start">
-                           <div className="flex-none h-16 flex flex-col justify-center">
-                             <p className="text-sm text-gray-600">
-                               마지막 물주기: {plant.lastWateringDate || '없음'}
-                             </p>
-                             <p className="text-sm text-gray-600">
-                               다음 물주기: {calculateNextWateringDate(plant, currentSeason) || '미정'}
-                             </p>
-                             <p className="text-xs text-gray-500">
-                               현재 계절 간격: {getIntervalForSeason(plant, currentSeason)}일
-                             </p>
-                           </div>
-                           
-                           {plant.notes && (
-                             <div className="w-150 ml-4">
-                               <div className="p-1 bg-gray-50 rounded text-sm text-gray-700 h-16">
-                                 <span className="font-medium">메모:</span> {plant.notes}
-                               </div>
-                             </div>
-                           )}
-                         </div>
-                         
-                         <div className="mt-2">
-                           <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">
-                             물주기 필요{delayDays > 0 ? ` (${delayDays}일 지연)` : ''}
+                         <div className="flex items-center justify-between mb-2">
+                           <h3 className="text-base font-semibold text-gray-900">{plant.name}</h3>
+                           <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium h-8 flex items-center">
+                             {delayDays > 0 ? `${delayDays}일 지연` : '물주기 필요'}
                            </span>
                          </div>
+                         
+                         <div className="space-y-1 mb-3">
+                           <p className="text-xs text-gray-600">
+                             마지막: {plant.lastWateringDate || '없음'}
+                           </p>
+                           <p className="text-xs text-gray-600">
+                             다음: {calculateNextWateringDate(plant, currentSeason) || '미정'}
+                           </p>
+                           <p className="text-xs text-gray-500">
+                             간격: {getIntervalForSeason(plant, currentSeason)}일
+                           </p>
+                         </div>
+                         
+                         {plant.notes && (
+                           <div className="mb-2">
+                             <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                               <span className="font-medium">메모:</span> {plant.notes}
+                             </p>
+                           </div>
+                         )}
                        </div>
                        
                        {/* 물주기 버튼 */}
-                       <div className="flex gap-2 ml-4">
+                       <div className="ml-3">
                          <button
                            onClick={() => handleWaterPlant(plant.id)}
-                           className="bg-blue-200 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-lg"
+                           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-sm h-8 w-8 flex items-center justify-center"
                            disabled={waterPlantMutation.isPending}
                            title={waterPlantMutation.isPending ? '물주는 중...' : '물주기'}
                          >

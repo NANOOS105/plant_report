@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @MappedSuperclass //공통 속성을 정의하는 부모 클래스
@@ -19,4 +17,12 @@ public class DateEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    // Getter 메서드 추가
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }

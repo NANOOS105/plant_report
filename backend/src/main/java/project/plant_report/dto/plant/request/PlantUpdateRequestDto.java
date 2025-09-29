@@ -17,4 +17,6 @@ public class PlantUpdateRequestDto {
 
     @Positive(message = "겨울 물주기 간격은 양수여야 합니다")
     private Integer winterInterval; // 겨울 물주기 (선택)
+    
+    private String notes; // 메모 (선택)
 }

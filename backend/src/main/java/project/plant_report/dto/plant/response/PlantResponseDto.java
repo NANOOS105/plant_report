@@ -13,6 +13,7 @@ public class PlantResponseDto {
     private Integer commonInterval; // 공통 물주기 간격
     private Integer summerInterval; // 여름 물주기 간격
     private Integer winterInterval; // 겨울 물주기 간격
+    private String notes; // 메모
 
     public PlantResponseDto(Plant plant){
         this.id = plant.getId();
@@ -21,5 +22,6 @@ public class PlantResponseDto {
         this.commonInterval = plant.getCommonInterval();
         this.summerInterval = plant.getSummerInterval();
         this.winterInterval = plant.getWinterInterval();
+        this.notes = plant.getNotes();
     }
 }

@@ -34,16 +34,18 @@ public class Plant extends DateEntity {
     private Integer summerInterval; // 여름 물주기 간격 (일, 선택적)
     private Integer winterInterval; // 겨울 물주기 간격 (일, 선택적)
     private LocalDate lastWateringDate; // 마지막 물 준 날짜
+    private String notes; // 메모
 
     //== 생성자 ==
     protected Plant(){}
 
-    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user) {
+    public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user, String notes) {
         this.name = name;
         this.user = user;
         this.commonInterval = commonInterval;
         this.summerInterval = summerInterval;
         this.winterInterval = winterInterval;
+        this.notes = notes;
 
         // 초기 물주기 상태 설정
         if (lastWateringDate != null) {
@@ -59,17 +61,18 @@ public class Plant extends DateEntity {
 
     // 테스트 및 편의용 생성자
     public Plant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval) {
-        this(name, commonInterval, summerInterval, winterInterval, null, Season.COMMON, null);
+        this(name, commonInterval, summerInterval, winterInterval, null, Season.COMMON, null, null);
     }
 
     //== 비즈니스 로직 ==
 
     // 식물 정보 수정
-    public void updatePlant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval) {
+    public void updatePlant(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, String notes) {
         this.name = name;
         this.commonInterval = commonInterval;
         this.summerInterval = summerInterval;
         this.winterInterval = winterInterval;
+        this.notes = notes;
     }
 
     // 물주기 실행

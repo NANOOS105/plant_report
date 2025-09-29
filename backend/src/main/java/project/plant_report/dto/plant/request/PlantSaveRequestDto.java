@@ -29,10 +29,12 @@ public class PlantSaveRequestDto {
     
     private Season season = Season.COMMON; // 등록 시점의 계절 (기본값: COMMON)
     
+    private String notes; // 메모 (선택적)
+    
     // @NotNull(message = "사용자 정보는 필수입니다") // 임시로 주석 처리
     private User user;
 
-    public PlantSaveRequestDto(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user) {
+    public PlantSaveRequestDto(String name, Integer commonInterval, Integer summerInterval, Integer winterInterval, LocalDate lastWateringDate, Season season, User user, String notes) {
         this.name = name;
         this.commonInterval = commonInterval;
         this.summerInterval = summerInterval;
@@ -40,5 +42,6 @@ public class PlantSaveRequestDto {
         this.lastWateringDate = lastWateringDate;
         this.season = season;
         this.user = user;
+        this.notes = notes;
     }
 }

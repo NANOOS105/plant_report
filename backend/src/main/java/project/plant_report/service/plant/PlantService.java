@@ -34,7 +34,8 @@ public class PlantService {
                 request.getWinterInterval(),
                 request.getLastWateringDate(),
                 request.getSeason(),
-                request.getUser()
+                request.getUser(),
+                request.getNotes()
         );
         plantRepository.save(plant);
     }
@@ -58,7 +59,7 @@ public class PlantService {
     public void updatePlant(Long id, PlantUpdateRequestDto request) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException(id));
-        plant.updatePlant(request.getName(), request.getCommonInterval(), request.getSummerInterval(), request.getWinterInterval());
+        plant.updatePlant(request.getName(), request.getCommonInterval(), request.getSummerInterval(), request.getWinterInterval(), request.getNotes());
     }
 
     //식물 삭제 서비스

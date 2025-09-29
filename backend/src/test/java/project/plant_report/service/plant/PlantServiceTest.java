@@ -46,7 +46,7 @@ class PlantServiceTest {
     public void savePlant() throws Exception{
         //given
         PlantSaveRequestDto request = new PlantSaveRequestDto(
-                "Rose",7,3,null, LocalDate.of(2025,1,1),Season.COMMON,null
+                "Rose",7,3,null, LocalDate.of(2025,1,1),Season.COMMON,null,"테스트 메모"
         );
         Plant plant = new Plant(
                 request.getName(),
@@ -55,7 +55,8 @@ class PlantServiceTest {
                 request.getWinterInterval(),
                 request.getLastWateringDate(),
                 request.getSeason(),
-                request.getUser()
+                request.getUser(),
+                request.getNotes()
         );
         when(plantRepository.save(any(Plant.class))).thenReturn(plant);
 
@@ -71,10 +72,10 @@ class PlantServiceTest {
      public void getPlants() throws Exception{
          //given
          Plant plant1 = new Plant(
-                 "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
+                 "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null, "장미 메모"
          );
          Plant plant2 = new Plant(
-                 "Tree",10,3,null, LocalDate.of(2024,1,1), Season.COMMON, null
+                 "Tree",10,3,null, LocalDate.of(2024,1,1), Season.COMMON, null, "나무 메모"
          );
          when(plantRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(plant1,plant2)));
 
@@ -95,7 +96,7 @@ class PlantServiceTest {
           Long plantId = 1L;
           Season season = Season.COMMON;
           Plant plant = new Plant(
-                  "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
+                  "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null, "물주기 테스트 메모"
           );
           when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));
 
@@ -113,7 +114,7 @@ class PlantServiceTest {
         Long plantId = 1L;
         Season season = Season.COMMON;
         Plant plant = new Plant(
-                "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null
+                "Rose",7,3,null, LocalDate.of(2025,1,1), Season.COMMON, null, "물주기 취소 테스트 메모"
         );
         plant.waterPlant(season);
         when(plantRepository.findById(plantId)).thenReturn(Optional.of(plant));

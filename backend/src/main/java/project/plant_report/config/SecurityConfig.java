@@ -36,19 +36,23 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authz -> authz
-               .requestMatchers("/api/auth/**").permitAll()  // 인증 관련 API는 누구나 접근 가능
-               .requestMatchers("/api/user").permitAll()     // 회원가입은 누구나 가능
-               .requestMatchers("/api/plant/**").authenticated() // 식물 API는 인증 필요
+               // 인증 불필요 (누구나 접근 가능)
+               .requestMatchers("/api/auth/**").permitAll()  // 로그인, 회원가입
+               .requestMatchers("/api/user").permitAll()     // 회원가입
+               .requestMatchers("/h2-console/**").permitAll() // H2 콘솔
+               .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger
                
-               // 커뮤니티 - 읽기는 누구나, 쓰기/수정/삭제는 인증 필요
-               .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/community/posts/**").permitAll() // 조회는 누구나
-               .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/community/posts/**").authenticated() // 작성은 인증 필요
-               .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/community/posts/**").authenticated() // 수정은 인증 필요
-               .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/community/posts/**").authenticated() // 삭제는 인증 필요
+               // 커뮤니티 - HTTP 메서드별 세밀한 제어
+               .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/community/**").permitAll() // 조회는 누구나
+               .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/community/**").authenticated() // 작성은 인증 필요
+               .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/community/**").authenticated() // 수정은 인증 필요
+               .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/community/**").authenticated() // 삭제는 인증 필요
                
-               .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
-               .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 접근 허용
-               .anyRequest().authenticated()  // 나머지는 인증 필요
+               // 식물 관리 - 모두 인증 필요
+               .requestMatchers("/api/plant/**").authenticated()
+               
+               // 나머지는 인증 필요
+               .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .headers(headers -> headers.frameOptions().disable()); // H2 콘솔용

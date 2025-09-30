@@ -16,8 +16,8 @@ export default function CommunityPage() {
   
   // 3. 데이터 가져오기
   // selectedCategory가 'ALL'이면 전체 조회, 아니면 카테고리별 조회
-  const { data: allPosts, isLoading: isLoadingAll } = usePosts(currentPage, 20);
-  const { data: categoryPosts, isLoading: isLoadingCategory } = usePostsByCategory(
+  const { data: allPosts, isLoading: isLoadingAll, error: errorAll } = usePosts(currentPage, 20);
+  const { data: categoryPosts, isLoading: isLoadingCategory, error: errorCategory } = usePostsByCategory(
     selectedCategory as string,
     currentPage,
     20
@@ -26,6 +26,13 @@ export default function CommunityPage() {
   // 4. 어떤 데이터를 보여줄지 결정
   const posts = selectedCategory === 'ALL' ? allPosts : categoryPosts;
   const isLoading = selectedCategory === 'ALL' ? isLoadingAll : isLoadingCategory;
+  const error = selectedCategory === 'ALL' ? errorAll : errorCategory;
+  
+  // 5. 디버깅 로그
+  console.log('선택된 카테고리:', selectedCategory);
+  console.log('게시글 데이터:', posts);
+  console.log('로딩 상태:', isLoading);
+  console.log('에러:', error);
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -78,11 +85,19 @@ export default function CommunityPage() {
         </button>
       </div>
 
+      {/* 에러 */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-800">에러가 발생했습니다: {error.message}</p>
+          <p className="text-sm text-red-600 mt-2">콘솔을 확인해주세요.</p>
+        </div>
+      )}
+
       {/* 로딩 중 */}
-      {isLoading && (
+      {isLoading && !error && (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">게시글을 불러오는 중...</p>
         </div>
       )}
 
@@ -140,8 +155,20 @@ export default function CommunityPage() {
 
           {/* 빈 목록 */}
           {posts.content.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              게시글이 없습니다.
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-5xl mb-4">📝</div>
+              <p className="text-gray-600 font-medium mb-2">게시글이 없습니다</p>
+              <p className="text-sm text-gray-500">
+                첫 번째 게시글을 작성해보세요!
+              </p>
+              {user && (
+                <Link
+                  href="/community/write"
+                  className="inline-block mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-medium"
+                >
+                  글쓰기
+                </Link>
+              )}
             </div>
           )}
         </div>

@@ -23,7 +23,6 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      alert('로그인 성공!');
       router.push('/');
     } catch (error) {
       setError(error instanceof Error ? error.message : '로그인에 실패했습니다.');

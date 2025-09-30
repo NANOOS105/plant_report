@@ -78,6 +78,14 @@ export default function Navigation() {
               식물 등록
             </Link>
 
+            {/* 커뮤니티 링크 */}
+            <Link 
+              href="/community" 
+              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              커뮤니티
+            </Link>
+
             {/* 로그인 상태에 따른 버튼 */}
             {user ? (
               <div className="flex items-center space-x-4">

@@ -2,10 +2,14 @@
 
 import { usePlants, useWaterPlant, useCancelWaterPlant } from '@/hooks/usePlants';
 import { useSeason } from '@/contexts/SeasonContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { calculateNextWateringDate, isWateringRequired, getWateringDelayDays, getIntervalForSeason } from '@/utils/plantUtils';
 import Link from 'next/link';
 
 export default function HomePage() {
+  // 인증 상태 확인
+  const { user } = useAuth();
+  
   // 모든 식물 목록 가져오기
   const { data: allPlants, isLoading, error } = usePlants();
   
@@ -28,6 +32,44 @@ export default function HomePage() {
   ) || [];
   
   console.log('물주기 필요한 식물:', wateringRequiredPlants);
+
+  // 비로그인 사용자에게 보여줄 내용
+  if (!user) {
+    return (
+      <div className="p-6 mt-30">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              🌱 Plant Report에 오신 것을 환영합니다!
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
+              식물 물주기 일정을 체계적으로 관리해보세요
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-4">📅</div>
+              <h3 className="text-lg font-semibold mb-2">물주기 일정 관리</h3>
+              <p className="text-gray-600">식물별 물주기 주기를 설정하고 놓치지 않도록 알림을 받아보세요</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-4">📊</div>
+              <h3 className="text-lg font-semibold mb-2">성장 기록</h3>
+              <p className="text-gray-600">식물의 성장 과정을 기록하고 관리 히스토리를 확인하세요</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-4">👥</div>
+              <h3 className="text-lg font-semibold mb-2">커뮤니티</h3>
+              <p className="text-gray-600">다른 식물 애호가들과 경험을 공유하고 정보를 교환하세요</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // 로딩 중일 때
   if (isLoading) return <div>로딩 중...</div>;

@@ -5,8 +5,17 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Season } from '@/types/plant';
 import { useSavePlant } from '@/hooks/usePlants';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function PlantRegisterPage() {
+  return (
+    <ProtectedRoute>
+      <PlantRegisterContent />
+    </ProtectedRoute>
+  );
+}
+
+function PlantRegisterContent() {
   const [formData, setFormData] = useState({
     name: '',
     commonInterval: '',

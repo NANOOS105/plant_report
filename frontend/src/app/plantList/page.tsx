@@ -6,8 +6,17 @@ import { useSeason } from '@/contexts/SeasonContext';
 import { Plant } from '@/types/plant';
 import { getIntervalForSeason, calculateNextWateringDate, isWateringRequired, getWateringDelayDays } from '@/utils/plantUtils';
 import Link from 'next/link';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function PlantListPage() {
+  return (
+    <ProtectedRoute>
+      <PlantListContent />
+    </ProtectedRoute>
+  );
+}
+
+function PlantListContent() {
   // 모든 식물 목록 가져오기
   const { data: plants, isLoading, error } = usePlants();
   

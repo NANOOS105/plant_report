@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()  // 인증 관련 API는 누구나 접근 가능
                 .requestMatchers("/api/user").permitAll()     // 회원가입은 누구나 가능
                 .requestMatchers("/api/plant/**").authenticated() // 식물 API는 인증 필요
+                .requestMatchers("/api/plantRegister/**").authenticated() // 커뮤니티 API는 인증 필요
                 .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 접근 허용
                 .anyRequest().authenticated()  // 나머지는 인증 필요

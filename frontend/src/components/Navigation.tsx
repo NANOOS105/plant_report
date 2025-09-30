@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 import SeasonSelector from '@/components/SeasonSelector';
 
 // 오늘 날짜를 포맷팅하는 함수
@@ -20,9 +21,12 @@ const getTodayString = () => {
 export default function Navigation() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     logout();
+    // React Query 캐시 초기화
+    queryClient.clear();
     router.push('/');
   };
 

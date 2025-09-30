@@ -3,8 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { usePlants, useUpdatePlant } from '@/hooks/usePlants';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function EditPlantPage() {
+  return (
+    <ProtectedRoute>
+      <EditPlantContent />
+    </ProtectedRoute>
+  );
+}
+
+function EditPlantContent() {
   const router = useRouter();
   const params = useParams();
   const plantId = parseInt(params.id as string);
